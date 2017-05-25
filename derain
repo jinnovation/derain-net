@@ -1,0 +1,29 @@
+#!/usr/bin/env python
+
+import argparse
+from scipy.misc import imread, imsave
+from cv2.ximgproc import guidedFilter
+
+parser = argparse.ArgumentParser(description="De-rain an image")
+parser.add_argument(
+    'input',
+    metavar='I',
+    help="An image to de-rain",
+)
+parser.add_argument(
+    'output',
+    metavar='O',
+    help="De-rained image output file name",
+    nargs="?",
+    default="out.jpg",
+)
+
+args = parser.parse_args()
+
+img = imread(args.input)
+
+img_base = guidedFilter(img,img,20,100000)
+img_detail = img - img_base
+
+imsave(args.output, img_base)
+imsave("detail.jpg", img_detail)

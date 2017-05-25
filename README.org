@@ -1,0 +1,14 @@
+#+TITLE: DerainNet
+#+AUTHOR: Jonathan Jin
+
+* Abstract
+
+A re-implementation of the [[https://arxiv.org/pdf/1609.02087v2.pdf][DerainNet method for single-image rain removal]].
+
+* Development Plan
+
+  The authors' rainy image dataset can be found [[http://smartdsp.xmu.edu.cn/memberpdf/fuxueyang/cvpr2017/rainy_image_dataset.zip][here]].
+  
+* References
+
+  - http://smartdsp.xmu.edu.cn/derainNet.html
