@@ -3,6 +3,7 @@
 import argparse
 from scipy.misc import imread, imsave
 from cv2.ximgproc import guidedFilter
+from guided_filter.core.filters import FastGuidedFilter
 
 parser = argparse.ArgumentParser(description="De-rain an image")
 parser.add_argument(
@@ -22,8 +23,12 @@ args = parser.parse_args()
 
 img = imread(args.input)
 
-img_base = guidedFilter(img,img,20,100000)
-img_detail = img - img_base
+gf = FastGuidedFilter(img,16,2,4)
+img_base = gf.filter(img)
+img_detail = img / 255.0 - img_base
+
+img_combine = img_base + img_detail
 
 imsave(args.output, img_base)
 imsave("detail.jpg", img_detail)
+imsave("combine.jpg", img_combine)
