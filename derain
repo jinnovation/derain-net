@@ -12,8 +12,7 @@ parser.add_argument(
     help="An image to de-rain",
 )
 parser.add_argument(
-    'output',
-    metavar='O',
+    '-o', '--output',
     help="De-rained image output file name",
     nargs="?",
     default="out.jpg",
