@@ -34,6 +34,19 @@ class TestNet():
                 [120,141],
             ]),
         ),
+        (
+            np.array([
+                [1,2,3],
+                [4,5,6],
+                [7,8,9],
+            ]),
+            np.array([[1]]),
+            np.array([
+                [1,2,3],
+                [4,5,6],
+                [7,8,9],
+            ]),
+        )
     ])
     def test_convolve_output_values(self, p_in, kernel, expected):
         np.testing.assert_allclose(net.convolve(p_in,kernel), expected)
