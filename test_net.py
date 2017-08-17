@@ -50,6 +50,13 @@ class TestNet():
                 [7,8,9],
             ]),
         ),
+        (
+            np.array([
+                [1,2],
+                [3,4],
+            ]),
+            np.empty(shape=(0,0)),
+        ),
     ])
     def test_convolve_raises_dimension_error(self,p_in, kernel):
         pytest.raises(net.DimensionException, net.convolve, p_in, kernel)
