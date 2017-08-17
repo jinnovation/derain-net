@@ -9,13 +9,12 @@ class DimensionException(Exception):
         return repr([self.dim1, self.dim2])
         
 def convolve(patch_in, kernel):
-    # TODO:
-    # assert that output is dimension inW-(kernelW-1) X inH-(kernelH-1)
-
-    dims_out = [patch_in.shape[dim] - kernel.shape[dim]-1 for dim in [0,1]]
-    if any([d<0 for d in dims_out]):
+    dims_out = [patch_in.shape[dim] - (kernel.shape[dim]-1) for dim in [0,1]]
+    if any([d<=0 for d in dims_out]):
         raise DimensionException(patch_in.shape, kernel.shape)
 
-    out = np.empty(dims_out)
-
-    return out
+    return np.array([[
+        np.sum(
+            patch_in[i:i+kernel.shape[0],j:j+kernel.shape[1]] * kernel
+        ) for j in range(dims_out[1])
+    ] for i in range(dims_out[0])])
