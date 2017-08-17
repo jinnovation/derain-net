@@ -3,38 +3,55 @@ import net
 import pytest
 
 class TestNet():
-    def test_convolve_output_values(self):
-        p_in = np.matrix([
-            [1,2,3],
-            [4,5,6],
-            [7,8,9],
-        ])
-        kernel = np.matrix([
-            [1,2],
-            [3,4],
-        ])
+    @pytest.mark.parametrize("p_in,kernel,expected", [
+        (
+            np.array([
+                [1,2,3],
+                [4,5,6],
+                [7,8,9],
+            ]),
+            np.array([
+                [1,2],
+                [3,4],
+            ]),
+            np.array([
+                [37, 47],
+                [67, 77],
+            ]),
+        ),
+        (
+            np.array([
+                [1,2,3],
+                [4,5,6],
+                [7,8,9],
+            ]),
+            np.array([
+                [1,2],
+                [3,4],
+                [5,6],
+            ]),
+            np.array([
+                [120,141],
+            ]),
+        ),
+    ])
+    def test_convolve_output_values(self, p_in, kernel, expected):
+        np.testing.assert_allclose(net.convolve(p_in,kernel), expected)
 
-        out = net.convolve(p_in, kernel)
-
-        assert np.matrix([
-            [1*1+2*2+3*4+4*5, 1*2+2*3+3*5+4*6],
-            [1*4+2*5+3*7+4*8, 1*5+2*6+3*8+4*9],
-        ]) == out
-
-    def test_convolve_raises_dimension_error(self):
-        for p_in, k in [
-            (
-                np.matrix([
-                    [1,2],
-                    [3,4],
-                ]),
-                np.matrix([
-                    [1,2,3],
-                    [4,5,6],
-                    [7,8,9],
-                ]),
-            ),
-        ]:
-            pytest.raises(net.DimensionException, net.convolve, p_in, k)
+    @pytest.mark.parametrize("p_in,kernel", [
+        (
+            np.array([
+                [1,2],
+                [3,4],
+            ]),
+            np.array([
+                [1,2,3],
+                [4,5,6],
+                [7,8,9],
+            ]),
+        ),
+    ])
+    def test_convolve_raises_dimension_error(self,p_in, kernel):
+        pytest.raises(net.DimensionException, net.convolve, p_in, kernel)
             
 
