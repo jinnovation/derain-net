@@ -51,27 +51,12 @@ class TestNet():
     def test_convolve_output_values(self, p_in, kernel, expected):
         np.testing.assert_allclose(net.convolve(p_in,kernel), expected)
 
-    @pytest.mark.parametrize("p_in,kernel", [
-        (
-            np.array([
-                [1,2],
-                [3,4],
-            ]),
-            np.array([
-                [1,2,3],
-                [4,5,6],
-                [7,8,9],
-            ]),
-        ),
-        (
-            np.array([
-                [1,2],
-                [3,4],
-            ]),
-            np.empty(shape=(0,0)),
-        ),
+    @pytest.mark.parametrize("d_in,d_k", [
+        ((2,2), (3,3)),
+        ((2,2), (0,0)),
     ])
-    def test_convolve_raises_dimension_error(self,p_in, kernel):
-        pytest.raises(net.DimensionException, net.convolve, p_in, kernel)
+    def test_convolve_raises_dimension_error_2d(self, d_in, d_k):
+        patch_in, kernel = np.empty(d_in), np.empty(d_k)
+        pytest.raises(net.DimensionException, net.convolve, patch_in, kernel)
             
 
