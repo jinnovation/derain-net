@@ -2,10 +2,12 @@
 
 from tqdm import tqdm
 
-from argparse import ArgumentParser
+from argparse import ArgumentParser, ArgumentTypeError
 from pathlib import Path
 import img
 from scipy.misc import imread
+import numpy as np
+import processor
 
 p = ArgumentParser(description="Train the neural network.")
 p.add_argument(
@@ -41,6 +43,15 @@ if __name__ == "__main__":
         if t.suffix == a.ext
     }
 
+    cnn_processor = processor.Convolver(
+        # layer 1: 512 kernels of 16 x 16 x 3
+        np.array([np.zeros((16,16,3)) for _ in xrange(512)]),
+        # layer 2: 512 kernels of 1 x 1 x 512
+        np.array([np.zeros((1,1,512)) for _ in xrange(512)]),
+        # layer 3: 3 kernels of 8 x 8 x 512
+        np.array([np.zeros((8,8,512)) for _ in xrange(3)]),
+    )
+
     for p_truth, ps_input in tqdm(
             paths.iteritems(),
             desc="Progress",
@@ -49,4 +60,5 @@ if __name__ == "__main__":
         _, i_truth = img.split(imread(p_truth))
         for p_input in ps_input:
             _, i_input = img.split(imread(p_input))
+            cnn_processor.process(i_input)
             # TODO: training wizardry
