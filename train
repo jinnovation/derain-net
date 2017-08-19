@@ -1,7 +1,11 @@
 #!/usr/bin/env python
 
+from tqdm import tqdm
+
 from argparse import ArgumentParser
 from pathlib import Path
+import img
+from scipy.misc import imread
 
 p = ArgumentParser(description="Train the neural network.")
 p.add_argument(
@@ -31,8 +35,18 @@ p.add_argument(
 if __name__ == "__main__":
     a = p.parse_args()
 
-    paths_truth_to_inputs = {
+    paths = {
         t: Path(a.dir, a.input_subdir).glob(t.stem + "_[0-9]*" + a.ext)
         for t in Path(a.dir, a.truth_subdir).iterdir()
         if t.suffix == a.ext
     }
+
+    for p_truth, ps_input in tqdm(
+            paths.iteritems(),
+            desc="Progress",
+            total= len(list(Path(a.dir, a.input_subdir).glob("*"+a.ext))),
+    ):
+        _, i_truth = img.split(imread(p_truth))
+        for p_input in ps_input:
+            _, i_input = img.split(imread(p_input))
+            # TODO: training wizardry
