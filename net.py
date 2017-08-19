@@ -1,7 +1,7 @@
 import numpy as np
 
 class DimensionException(Exception):
-    def __init(self, shape_patch=None, shapes_kernel=None):
+    def __init__(self, shape_patch=None, shapes_kernel=None):
         self.shape_patch = shape_patch
         self.shapes_kernel= shapes_kernel
 
