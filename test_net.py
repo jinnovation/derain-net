@@ -2,7 +2,7 @@ import numpy as np
 import net
 import pytest
 
-class TestNet():
+class TestConvolve():
     @pytest.mark.parametrize("p_in,kernels,expected", [
         (
             np.array([
@@ -87,7 +87,7 @@ class TestNet():
             ]),
         ),
     ])
-    def test_convolve_output_values(self, p_in, kernels, expected):
+    def test_output_values(self, p_in, kernels, expected):
         out = net.convolve(p_in, *kernels)
         np.testing.assert_allclose(out, expected)
 
@@ -97,6 +97,6 @@ class TestNet():
         ((2,2,1), [(1,1,2)]),
         ((2,2,1), [(1,1,1),(1,1,2)]),
     ])
-    def test_convolve_raises_dimension_error_2d(self, d_in, ds_k):
+    def test_raises_dimension_error_2d(self, d_in, ds_k):
         patch_in, kernels = np.empty(d_in), [np.empty(d_k) for d_k in ds_k]
         pytest.raises(net.DimensionException, net.convolve, patch_in, *kernels)
