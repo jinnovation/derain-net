@@ -3,7 +3,7 @@
 
 * Abstract
 
-A re-implementation of the [[https://arxiv.org/pdf/1609.02087v2.pdf][DerainNet method for single-image rain removal]].
+  A re-implementation of the [[https://arxiv.org/pdf/1609.02087v2.pdf][DerainNet method for single-image rain removal]].
 
 * Development Plan
 
