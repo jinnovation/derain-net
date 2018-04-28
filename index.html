@@ -1,0 +1,565 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2018-04-30 Mon 18:55 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Reimplementing a deep network architecture for single-image rain removal</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="Jonathan Jin" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-42551205-2"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'UA-42551205-2');
+</script>
+<link rel="stylesheet" type="text/css" href="https://www.pirilampo.org/styles/readtheorg/css/htmlize.css"/>
+<link rel="stylesheet" type="text/css" href="https://www.pirilampo.org/styles/readtheorg/css/readtheorg.css"/>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="https://www.pirilampo.org/styles/lib/js/jquery.stickytableheaders.min.js"></script>
+<script type="text/javascript" src="https://www.pirilampo.org/styles/readtheorg/js/readtheorg.js"></script>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2018 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">Reimplementing a deep network architecture for single-image rain removal</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org31ad7fb">1. Abstract</a></li>
+<li><a href="#org3cadb59">2. <span class="todo TODO">TODO</span> <code>[0/1]</code> Development</a>
+<ul>
+<li><a href="#orgce02d44">2.1. Preamble</a></li>
+<li><a href="#orgca296e9">2.2. <span class="todo TODO">TODO</span> <code>[0/1]</code> Data importing and preparation</a>
+<ul>
+<li><a href="#org83bf083">2.2.1. <span class="todo TODO">TODO</span> Defining the dataset</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#orgf4bd512">3. References</a></li>
+<li><a href="#org7e236e5">4. Appendix</a>
+<ul>
+<li><a href="#org876303d">4.1. The Dataset</a></li>
+<li><a href="#org06e1edd">4.2. The Report</a></li>
+<li><a href="#orgcfe0f32">4.3. The Site</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org31ad7fb" class="outline-2">
+<h2 id="org31ad7fb"><span class="section-number-2">1</span> Abstract</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+We present a re-implementation of the <a href="https://arxiv.org/pdf/1609.02087v2.pdf">DerainNet method for single-image rain
+removal</a> in the <a href="https://www-cs-faculty.stanford.edu/~knuth/lp.html">literate programming</a> style. Our approach here deviates slightly
+from the authors&rsquo; implementation in a variety of ways, most notably of which
+is the use of <a href="https://www.tensorflow.org">TensorFlow</a> for all stages in the workflow: data preparation;
+model definition; model training; and so on.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org3cadb59" class="outline-2">
+<h2 id="org3cadb59"><span class="section-number-2">2</span> <span class="todo TODO">TODO</span> <code>[0/1]</code> Development</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+We&rsquo;ll split the development process roughly into the following stages:
+</p>
+
+<ul class="org-ul">
+<li>Data importing/preparation;</li>
+<li>Model training.</li>
+</ul>
+</div>
+
+<div id="outline-container-orgce02d44" class="outline-3">
+<h3 id="orgce02d44"><span class="section-number-3">2.1</span> Preamble</h3>
+<div class="outline-text-3" id="text-2-1">
+<div class="org-src-container">
+<pre class="src src-bash">virtualenv --system-site-packages -p python2 derain-net
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(pyvenv-activate <span style="color: #A3BE8C;">"./derain-net"</span>)
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgca296e9" class="outline-3">
+<h3 id="orgca296e9"><span class="section-number-3">2.2</span> <span class="todo TODO">TODO</span> <code>[0/1]</code> Data importing and preparation</h3>
+<div class="outline-text-3" id="text-2-2">
+</div>
+<div id="outline-container-org83bf083" class="outline-4">
+<h4 id="org83bf083"><span class="section-number-4">2.2.1</span> <span class="todo TODO">TODO</span> Defining the dataset</h4>
+<div class="outline-text-4" id="text-2-2-1">
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #81A1C1;">import</span> glob
+<span style="color: #81A1C1;">import</span> os
+<span style="color: #81A1C1;">import</span> tensorflow <span style="color: #81A1C1;">as</span> tf
+</pre>
+</div>
+
+<p>
+The dataset directory is organized into two folders:
+</p>
+
+<ul class="org-ul">
+<li><code>ground truth</code> images; and</li>
+<li><code>rainy</code> images.</li>
+</ul>
+
+
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #D8DEE9;">GROUND_TRUTH_DIR</span> = <span style="color: #A3BE8C;">"ground truth"</span>
+<span style="color: #D8DEE9;">RAINY_IMAGE_DIR</span> = <span style="color: #A3BE8C;">"rainy image"</span>
+</pre>
+</div>
+
+<p>
+These correspond to our model&rsquo;s expected outputs, as well as the inputs,
+respectively. Likewise, each &ldquo;ground truth&rdquo; image corresponds to one or more
+&ldquo;rainy&rdquo; images according to some &ldquo;index&rdquo; value &#x2013; <code>ground truth/1.jpg</code> to
+<code>rainy image/1_{1,2,3}.jpg</code>, <code>ground truth/100.jpg</code> to <code>rainy
+    image/100_{1,2,3,4,5}</code>, and so on.
+</p>
+
+<p>
+With this topology in mind, we can define a function to retrieve all index
+values within the data directory:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #81A1C1;">def</span> <span style="color: #88C0D0;">_get_indices</span>(data_dir):
+    <span style="color: #4c566a;">"""Get indices for input/output association.</span>
+
+<span style="color: #4c566a;">    Args:</span>
+<span style="color: #4c566a;">    data_dir: Path to the data directory.</span>
+
+<span style="color: #4c566a;">    Returns:</span>
+<span style="color: #4c566a;">    indices: List of numerical index values.</span>
+
+<span style="color: #4c566a;">    Raises:</span>
+<span style="color: #4c566a;">    ValueError: If no data_dir or no ground-truth dir.</span>
+<span style="color: #4c566a;">    """</span>
+
+    <span style="color: #81A1C1;">if</span> <span style="color: #81A1C1;">not</span> tf.gfile.Exists(os.path.join(data_dir, GROUND_TRUTH_DIR)):
+        <span style="color: #81A1C1;">raise</span> <span style="color: #8FBCBB;">ValueError</span>(<span style="color: #A3BE8C;">"Failed to find ground-truth directory."</span>)
+
+    <span style="color: #81A1C1;">return</span> [
+        os.path.splitext(os.path.basename(f))[0]
+        <span style="color: #81A1C1;">for</span> f <span style="color: #81A1C1;">in</span> glob.glob(os.path.join(data_dir, GROUND_TRUTH_DIR, <span style="color: #A3BE8C;">"*.jpg"</span>))
+    ]
+</pre>
+</div>
+
+<p>
+Likewise, we can define functions to retrieve the filenames of all input and
+output files corresponding to a given set of indices.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #81A1C1;">def</span> <span style="color: #88C0D0;">_get_input_files</span>(data_dir, indices):
+    <span style="color: #4c566a;">"""Get input files from indices.</span>
+
+<span style="color: #4c566a;">    Args:</span>
+<span style="color: #4c566a;">    data_dir: Path to the data directory.</span>
+<span style="color: #4c566a;">    indices: List of numerical index values.</span>
+
+<span style="color: #4c566a;">    Returns:</span>
+<span style="color: #4c566a;">    Dictionary, keyed by index value, valued by string lists containing</span>
+<span style="color: #4c566a;">    one or more filenames.</span>
+
+<span style="color: #4c566a;">    Raises:</span>
+<span style="color: #4c566a;">    ValueError: If no rainy-image dir.</span>
+<span style="color: #4c566a;">    """</span>
+
+    <span style="color: #D8DEE9;">directory</span> = os.path.join(data_dir, RAINY_IMAGE_DIR)
+    <span style="color: #81A1C1;">if</span> <span style="color: #81A1C1;">not</span> tf.gfile.Exists(directory):
+        <span style="color: #81A1C1;">raise</span> <span style="color: #8FBCBB;">ValueError</span>(<span style="color: #A3BE8C;">"Failed to find rainy-image directory."</span>)
+
+    <span style="color: #81A1C1;">return</span> {
+        i: glob.glob(os.path.join(directory, <span style="color: #A3BE8C;">"{}_[0-9]*.jpg"</span>.<span style="color: #81A1C1;">format</span>(i)))
+        <span style="color: #81A1C1;">for</span> i <span style="color: #81A1C1;">in</span> indices
+    }
+
+
+<span style="color: #81A1C1;">def</span> <span style="color: #88C0D0;">_get_output_files</span>(data_dir, indices):
+    <span style="color: #4c566a;">"""Get output files from indices.</span>
+
+<span style="color: #4c566a;">    Args:</span>
+<span style="color: #4c566a;">    data_dir: Path to the data directory.</span>
+<span style="color: #4c566a;">    indices: List of numerical index values.</span>
+
+<span style="color: #4c566a;">    Returns:</span>
+<span style="color: #4c566a;">    outputs: Dictionary, keyed by index value, valued by stsring lists</span>
+<span style="color: #4c566a;">    containing one or more filenames.</span>
+
+<span style="color: #4c566a;">    Raises:</span>
+<span style="color: #4c566a;">    ValueError: If no ground-truth dir.</span>
+<span style="color: #4c566a;">    """</span>
+
+    <span style="color: #D8DEE9;">directory</span> = os.path.join(data_dir, GROUND_TRUTH_DIR)
+    <span style="color: #81A1C1;">if</span> <span style="color: #81A1C1;">not</span> tf.gfile.Exists(directory):
+        <span style="color: #81A1C1;">raise</span> <span style="color: #8FBCBB;">ValueError</span>(<span style="color: #A3BE8C;">"Failed to find ground-truth directory."</span>)
+
+    <span style="color: #81A1C1;">return</span> {
+        i: os.path.join(directory, <span style="color: #A3BE8C;">"{}.jpg"</span>.<span style="color: #81A1C1;">format</span>(i)) <span style="color: #81A1C1;">for</span> i <span style="color: #81A1C1;">in</span> indices
+    }
+</pre>
+</div>
+
+<p>
+Now we arrive at our first deviation from the author&rsquo;s implementation. The
+authors, in their paper, don&rsquo;t seem to perform any standardized cropping on
+their images, relying on the inputs to all be identical in resolution or, at
+most, flipped, e.g. <code>384x512</code> and <code>512x384</code>. Here, to ease integration with
+TensorFlow, we settle on a common length to truncate inputs and outputs by
+along both dimensions.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #D8DEE9;">IMAGE_SIZE</span> = 384
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #81A1C1;">def</span> <span style="color: #88C0D0;">dataset</span>(data_dir, batch_size, indices=<span style="color: #81A1C1;">None</span>):
+    <span style="color: #4c566a;">"""Construct dataset for rainy-image evaluation.</span>
+
+<span style="color: #4c566a;">    Args:</span>
+<span style="color: #4c566a;">    data_dir: Path to the data directory.</span>
+<span style="color: #4c566a;">    batch_size: Number of images per batch.</span>
+<span style="color: #4c566a;">    indices: The input-output pairings to return. If None (the default), uses</span>
+<span style="color: #4c566a;">    indices present in the data directory.</span>
+
+<span style="color: #4c566a;">    Returns:</span>
+<span style="color: #4c566a;">    dataset: Dataset of input-output images.</span>
+<span style="color: #4c566a;">    """</span>
+
+    <span style="color: #81A1C1;">if</span> <span style="color: #81A1C1;">not</span> indices:
+        <span style="color: #D8DEE9;">indices</span> = _get_indices(data_dir)
+
+    <span style="color: #D8DEE9;">fs_in</span> = _get_input_files(data_dir, indices)
+    <span style="color: #D8DEE9;">fs_out</span> = _get_output_files(data_dir, indices)
+
+    <span style="color: #D8DEE9;">ins</span> = [
+        fname <span style="color: #81A1C1;">for</span> k, v <span style="color: #81A1C1;">in</span> <span style="color: #81A1C1;">iter</span>(<span style="color: #81A1C1;">sorted</span>(fs_in.iteritems()))
+        <span style="color: #81A1C1;">for</span> fname <span style="color: #81A1C1;">in</span> v <span style="color: #81A1C1;">if</span> k <span style="color: #81A1C1;">in</span> indices
+    ]
+
+    <span style="color: #D8DEE9;">outs</span> = [v <span style="color: #81A1C1;">for</span> sublist <span style="color: #81A1C1;">in</span> [
+        [fname] * <span style="color: #81A1C1;">len</span>(fs_in[k])
+        <span style="color: #81A1C1;">for</span> k, fname <span style="color: #81A1C1;">in</span> <span style="color: #81A1C1;">iter</span>(<span style="color: #81A1C1;">sorted</span>(fs_out.iteritems()))
+        <span style="color: #81A1C1;">if</span> k <span style="color: #81A1C1;">in</span> indices
+    ] <span style="color: #81A1C1;">for</span> v <span style="color: #81A1C1;">in</span> sublist]
+
+    <span style="color: #81A1C1;">def</span> <span style="color: #88C0D0;">_parse_function</span>(fname_in, fname_out):
+        <span style="color: #81A1C1;">def</span> <span style="color: #88C0D0;">_decode_resize</span>(fname):
+            <span style="color: #81A1C1;">return</span> tf.image.resize_image_with_crop_or_pad(
+                tf.image.decode_jpeg(fname), IMAGE_SIZE, IMAGE_SIZE,
+            )
+
+        <span style="color: #81A1C1;">return</span> _decode_resize(fname_in), _decode_resize(fname_out)
+
+    <span style="color: #D8DEE9;">dataset</span> = tf.data.Dataset.from_tensor_slices(
+        (tf.constant(ins), tf.constant(outs)),
+    ).<span style="color: #81A1C1;">map</span>(_parse_function)
+
+    <span style="color: #81A1C1;">return</span> dataset.batch(batch_size)
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgf4bd512" class="outline-2">
+<h2 id="orgf4bd512"><span class="section-number-2">3</span> References</h2>
+<div class="outline-text-2" id="text-3">
+<ul class="org-ul">
+<li><a href="http://smartdsp.xmu.edu.cn/derainNet.html">http://smartdsp.xmu.edu.cn/derainNet.html</a></li>
+
+<li>X. Fu, J. Huang, D. Zeng, Y. Huang, X. Ding and J. Paisley. ¡°Removing Rain
+from Single Images via a Deep Detail Network¡±, CVPR, 2017.</li>
+
+<li>X. Fu, J. Huang, X. Ding, Y. Liao and J. Paisley. ¡°Clearing the Skies: A
+deep network architecture for single-image rain removal¡±, IEEE Transactions
+on Image Processing, vol. 26, no. 6, pp. 2944-2956, 2017.</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org7e236e5" class="outline-2">
+<h2 id="org7e236e5"><span class="section-number-2">4</span> Appendix</h2>
+<div class="outline-text-2" id="text-4">
+</div>
+<div id="outline-container-org876303d" class="outline-3">
+<h3 id="org876303d"><span class="section-number-3">4.1</span> The Dataset</h3>
+<div class="outline-text-3" id="text-4-1">
+<p>
+The authors&rsquo; rainy image dataset can be found <a href="http://smartdsp.xmu.edu.cn/memberpdf/fuxueyang/cvpr2017/rainy_image_dataset.zip">here</a>. Unfortunately, that page
+was, at the start of this project, unreliable at best; it is now, as of
+04/28/2018, entirely unavailable. As such, at the start of this project, I
+took the liberty of cloning the authors&rsquo; dataset; it is available at
+<a href="https://github.com/jinnovation/rainy-image-dataset">github.com/jinnovation/rainy-image-dataset</a>.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org06e1edd" class="outline-3">
+<h3 id="org06e1edd"><span class="section-number-3">4.2</span> The Report</h3>
+<div class="outline-text-3" id="text-4-2">
+<p>
+This article is written with Emacs and <a href="https://orgmode.org/manual/HTML-export.html">Org mode</a> in the <a href="https://www-cs-faculty.stanford.edu/~knuth/lp.html">literate programming</a>
+style. 
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgcfe0f32" class="outline-3">
+<h3 id="orgcfe0f32"><span class="section-number-3">4.3</span> The Site</h3>
+<div class="outline-text-3" id="text-4-3">
+<p>
+This write-up is also available at <a href="https://jinnovation.github.io/derain-net">jinnovation.github.io/derain-net</a>. It is
+generated using Org-mode&rsquo;s <a href="https://orgmode.org/manual/HTML-export.html">HTML export functionality</a>, as well as the
+<a href="https://github.com/fniessen/org-html-themes">ReadTheOrg theme</a>.
+</p>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="date">Date: 2018-04-28 Sat 00:00</p>
+<p class="author">Author: Jonathan Jin</p>
+<p class="date">Created: 2018-04-30 Mon 18:55</p>
+<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>

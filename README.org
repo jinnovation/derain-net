@@ -1,14 +1,246 @@
-#+TITLE: DerainNet
+# -*- after-save-hook: (org-html-export-to-html org-babel-tangle); -*-
+
+#+TITLE: Reimplementing a deep network architecture for single-image rain removal
 #+AUTHOR: Jonathan Jin
+#+DATE: <2018-04-28 Sat>
+#+EMAIL: jjin082693@gmail.com
+
+#+HTML_HEAD:    <!-- Global site tag (gtag.js) - Google Analytics -->
+#+HTML_HEAD:    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-42551205-2"></script>
+#+HTML_HEAD:    <script>
+#+HTML_HEAD:    window.dataLayer = window.dataLayer || [];
+#+HTML_HEAD:    function gtag(){dataLayer.push(arguments);}
+#+HTML_HEAD:    gtag('js', new Date());
+#+HTML_HEAD:    gtag('config', 'UA-42551205-2');
+#+HTML_HEAD:    </script>
+
+#+EXPORT_FILE_NAME: index
+
+#+SETUPFILE: theme.setup
 
 * Abstract
 
-  A re-implementation of the [[https://arxiv.org/pdf/1609.02087v2.pdf][DerainNet method for single-image rain removal]].
+  We present a re-implementation of the [[https://arxiv.org/pdf/1609.02087v2.pdf][DerainNet method for single-image rain
+  removal]] in the [[https://www-cs-faculty.stanford.edu/~knuth/lp.html][literate programming]] style. Our approach here deviates slightly
+  from the authors' implementation in a variety of ways, most notably of which
+  is the use of [[https://www.tensorflow.org][TensorFlow]] for all stages in the workflow: data preparation;
+  model definition; model training; and so on.
+ 
+* TODO [0/1] Development
 
-* Development Plan
+  We'll split the development process roughly into the following stages:
 
-  The authors' rainy image dataset can be found [[http://smartdsp.xmu.edu.cn/memberpdf/fuxueyang/cvpr2017/rainy_image_dataset.zip][here]].
+  - Data importing/preparation;
+  - Model training.
   
+** Preamble
+
+   #+BEGIN_SRC bash
+     virtualenv --system-site-packages -p python2 derain-net
+   #+END_SRC
+
+   #+BEGIN_SRC emacs-lisp
+     (pyvenv-activate "./derain-net")
+   #+END_SRC
+  
+** TODO [0/1] Data importing and preparation
+
+*** TODO Defining the dataset
+    :PROPERTIES:
+    :header-args: :tangle rainy_image_input.py
+    :END:
+
+    #+BEGIN_SRC python
+      import glob
+      import os
+      import tensorflow as tf
+    #+END_SRC
+
+    The dataset directory is organized into two folders:
+
+    - =ground truth= images; and
+    - =rainy= images.
+
+
+    #+BEGIN_SRC python
+      GROUND_TRUTH_DIR = "ground truth"
+      RAINY_IMAGE_DIR = "rainy image"
+    #+END_SRC
+
+    These correspond to our model's expected outputs, as well as the inputs,
+    respectively. Likewise, each "ground truth" image corresponds to one or more
+    "rainy" images according to some "index" value -- =ground truth/1.jpg= to
+    =rainy image/1_{1,2,3}.jpg=, =ground truth/100.jpg= to =rainy
+    image/100_{1,2,3,4,5}=, and so on.
+
+    With this topology in mind, we can define a function to retrieve all index
+    values within the data directory:
+
+    #+BEGIN_SRC python
+      def _get_indices(data_dir):
+          """Get indices for input/output association.
+
+          Args:
+          data_dir: Path to the data directory.
+
+          Returns:
+          indices: List of numerical index values.
+
+          Raises:
+          ValueError: If no data_dir or no ground-truth dir.
+          """
+
+          if not tf.gfile.Exists(os.path.join(data_dir, GROUND_TRUTH_DIR)):
+              raise ValueError("Failed to find ground-truth directory.")
+
+          return [
+              os.path.splitext(os.path.basename(f))[0]
+              for f in glob.glob(os.path.join(data_dir, GROUND_TRUTH_DIR, "*.jpg"))
+          ]
+    #+END_SRC
+
+    #+BEGIN_COMMENT
+    TODO: Unit tests.
+    #+END_COMMENT
+
+    Likewise, we can define functions to retrieve the filenames of all input and
+    output files corresponding to a given set of indices.
+
+    #+BEGIN_SRC python
+      def _get_input_files(data_dir, indices):
+          """Get input files from indices.
+
+          Args:
+          data_dir: Path to the data directory.
+          indices: List of numerical index values.
+
+          Returns:
+          Dictionary, keyed by index value, valued by string lists containing
+          one or more filenames.
+
+          Raises:
+          ValueError: If no rainy-image dir.
+          """
+
+          directory = os.path.join(data_dir, RAINY_IMAGE_DIR)
+          if not tf.gfile.Exists(directory):
+              raise ValueError("Failed to find rainy-image directory.")
+
+          return {
+              i: glob.glob(os.path.join(directory, "{}_[0-9]*.jpg".format(i)))
+              for i in indices
+          }
+
+
+      def _get_output_files(data_dir, indices):
+          """Get output files from indices.
+
+          Args:
+          data_dir: Path to the data directory.
+          indices: List of numerical index values.
+
+          Returns:
+          outputs: Dictionary, keyed by index value, valued by stsring lists
+          containing one or more filenames.
+
+          Raises:
+          ValueError: If no ground-truth dir.
+          """
+
+          directory = os.path.join(data_dir, GROUND_TRUTH_DIR)
+          if not tf.gfile.Exists(directory):
+              raise ValueError("Failed to find ground-truth directory.")
+
+          return {
+              i: os.path.join(directory, "{}.jpg".format(i)) for i in indices
+          }
+    #+END_SRC
+
+    Now we arrive at our first deviation from the author's implementation. The
+    authors, in their paper, don't seem to perform any standardized cropping on
+    their images, relying on the inputs to all be identical in resolution or, at
+    most, flipped, e.g. =384x512= and =512x384=. Here, to ease integration with
+    TensorFlow, we settle on a common length to truncate inputs and outputs by
+    along both dimensions.
+
+    #+BEGIN_SRC python
+      IMAGE_SIZE = 384
+    #+END_SRC
+
+    #+BEGIN_SRC python
+      def dataset(data_dir, batch_size, indices=None):
+          """Construct dataset for rainy-image evaluation.
+
+          Args:
+          data_dir: Path to the data directory.
+          batch_size: Number of images per batch.
+          indices: The input-output pairings to return. If None (the default), uses
+          indices present in the data directory.
+
+          Returns:
+          dataset: Dataset of input-output images.
+          """
+
+          if not indices:
+              indices = _get_indices(data_dir)
+
+          fs_in = _get_input_files(data_dir, indices)
+          fs_out = _get_output_files(data_dir, indices)
+
+          ins = [
+              fname for k, v in iter(sorted(fs_in.iteritems()))
+              for fname in v if k in indices
+          ]
+
+          outs = [v for sublist in [
+              [fname] * len(fs_in[k])
+              for k, fname in iter(sorted(fs_out.iteritems()))
+              if k in indices
+          ] for v in sublist]
+
+          def _parse_function(fname_in, fname_out):
+              def _decode_resize(fname):
+                  return tf.image.resize_image_with_crop_or_pad(
+                      tf.image.decode_jpeg(fname), IMAGE_SIZE, IMAGE_SIZE,
+                  )
+
+              return _decode_resize(fname_in), _decode_resize(fname_out)
+
+          dataset = tf.data.Dataset.from_tensor_slices(
+              (tf.constant(ins), tf.constant(outs)),
+          ).map(_parse_function)
+
+          return dataset.batch(batch_size)
+    #+END_SRC
+
 * References
 
   - http://smartdsp.xmu.edu.cn/derainNet.html
+    
+  - X. Fu, J. Huang, D. Zeng, Y. Huang, X. Ding and J. Paisley. ¡°Removing Rain
+    from Single Images via a Deep Detail Network¡±, CVPR, 2017.
+
+  - X. Fu, J. Huang, X. Ding, Y. Liao and J. Paisley. ¡°Clearing the Skies: A
+    deep network architecture for single-image rain removal¡±, IEEE Transactions
+    on Image Processing, vol. 26, no. 6, pp. 2944-2956, 2017.
+
+* Appendix
+
+** The Dataset
+
+   The authors' rainy image dataset can be found [[http://smartdsp.xmu.edu.cn/memberpdf/fuxueyang/cvpr2017/rainy_image_dataset.zip][here]]. Unfortunately, that page
+   was, at the start of this project, unreliable at best; it is now, as of
+   04/28/2018, entirely unavailable. As such, at the start of this project, I
+   took the liberty of cloning the authors' dataset; it is available at
+   [[https://github.com/jinnovation/rainy-image-dataset][github.com/jinnovation/rainy-image-dataset]].
+  
+** The Report
+
+   This article is written with Emacs and [[https://orgmode.org/manual/HTML-export.html][Org mode]] in the [[https://www-cs-faculty.stanford.edu/~knuth/lp.html][literate programming]]
+   style. 
+
+** The Site
+
+   This write-up is also available at [[https://jinnovation.github.io/derain-net][jinnovation.github.io/derain-net]]. It is
+   generated using Org-mode's [[https://orgmode.org/manual/HTML-export.html][HTML export functionality]], as well as the
+   [[https://github.com/fniessen/org-html-themes][ReadTheOrg theme]].
