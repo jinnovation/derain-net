@@ -5,15 +5,16 @@ bleach==1.5.0
 docopt==0.6.2
 enum34==1.1.6
 funcsigs==1.0.2
-futures==3.2.0
-guided-filter==1.0
+git+https://github.com/tody411/GuidedFilter.git#guided-filter==1.0
 html5lib==0.9999999
+jedi==0.12.0
 Markdown==2.6.11
 mock==2.0.0
-numpy==1.12.1
+numpy==1.14.3
 olefile==0.44
 opencv-contrib-python==3.2.0.7
 packaging==16.8
+parso==0.2.0
 pathlib==1.0.1
 pbr==3.1.1
 Pillow==4.1.1
@@ -26,4 +27,5 @@ six==1.10.0
 tensorflow==1.5.0
 tensorflow-tensorboard==1.5.1
 tqdm==4.15.0
+virtualenv==15.2.0
 Werkzeug==0.14.1

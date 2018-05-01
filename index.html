@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2018-04-30 Mon 18:55 -->
+<!-- 2018-04-30 Mon 22:39 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Reimplementing a deep network architecture for single-image rain removal</title>
@@ -248,31 +248,31 @@ for the JavaScript code in this tag.
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org31ad7fb">1. Abstract</a></li>
-<li><a href="#org3cadb59">2. <span class="todo TODO">TODO</span> <code>[0/1]</code> Development</a>
+<li><a href="#orgf858406">1. Abstract</a></li>
+<li><a href="#orgcf50538">2. <span class="todo TODO">TODO</span> <code>[0/1]</code> Development</a>
 <ul>
-<li><a href="#orgce02d44">2.1. Preamble</a></li>
-<li><a href="#orgca296e9">2.2. <span class="todo TODO">TODO</span> <code>[0/1]</code> Data importing and preparation</a>
+<li><a href="#orga3dcdea">2.1. Preamble</a></li>
+<li><a href="#org23f1af9">2.2. <span class="todo TODO">TODO</span> <code>[0/1]</code> Data importing and preparation</a>
 <ul>
-<li><a href="#org83bf083">2.2.1. <span class="todo TODO">TODO</span> Defining the dataset</a></li>
+<li><a href="#org582597e">2.2.1. <span class="todo TODO">TODO</span> Defining the dataset</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#orgf4bd512">3. References</a></li>
-<li><a href="#org7e236e5">4. Appendix</a>
+<li><a href="#org2839551">3. References</a></li>
+<li><a href="#org9c26bd3">4. Appendix</a>
 <ul>
-<li><a href="#org876303d">4.1. The Dataset</a></li>
-<li><a href="#org06e1edd">4.2. The Report</a></li>
-<li><a href="#orgcfe0f32">4.3. The Site</a></li>
+<li><a href="#org00cc7bc">4.1. The Dataset</a></li>
+<li><a href="#orgde18235">4.2. The Report</a></li>
+<li><a href="#orga9af483">4.3. The Site</a></li>
 </ul>
 </li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-org31ad7fb" class="outline-2">
-<h2 id="org31ad7fb"><span class="section-number-2">1</span> Abstract</h2>
+<div id="outline-container-orgf858406" class="outline-2">
+<h2 id="orgf858406"><span class="section-number-2">1</span> Abstract</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 We present a re-implementation of the <a href="https://arxiv.org/pdf/1609.02087v2.pdf">DerainNet method for single-image rain
@@ -284,8 +284,8 @@ model definition; model training; and so on.
 </div>
 </div>
 
-<div id="outline-container-org3cadb59" class="outline-2">
-<h2 id="org3cadb59"><span class="section-number-2">2</span> <span class="todo TODO">TODO</span> <code>[0/1]</code> Development</h2>
+<div id="outline-container-orgcf50538" class="outline-2">
+<h2 id="orgcf50538"><span class="section-number-2">2</span> <span class="todo TODO">TODO</span> <code>[0/1]</code> Development</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 We&rsquo;ll split the development process roughly into the following stages:
@@ -297,8 +297,8 @@ We&rsquo;ll split the development process roughly into the following stages:
 </ul>
 </div>
 
-<div id="outline-container-orgce02d44" class="outline-3">
-<h3 id="orgce02d44"><span class="section-number-3">2.1</span> Preamble</h3>
+<div id="outline-container-orga3dcdea" class="outline-3">
+<h3 id="orga3dcdea"><span class="section-number-3">2.1</span> Preamble</h3>
 <div class="outline-text-3" id="text-2-1">
 <div class="org-src-container">
 <pre class="src src-bash">virtualenv --system-site-packages -p python2 derain-net
@@ -312,12 +312,12 @@ We&rsquo;ll split the development process roughly into the following stages:
 </div>
 </div>
 
-<div id="outline-container-orgca296e9" class="outline-3">
-<h3 id="orgca296e9"><span class="section-number-3">2.2</span> <span class="todo TODO">TODO</span> <code>[0/1]</code> Data importing and preparation</h3>
+<div id="outline-container-org23f1af9" class="outline-3">
+<h3 id="org23f1af9"><span class="section-number-3">2.2</span> <span class="todo TODO">TODO</span> <code>[0/1]</code> Data importing and preparation</h3>
 <div class="outline-text-3" id="text-2-2">
 </div>
-<div id="outline-container-org83bf083" class="outline-4">
-<h4 id="org83bf083"><span class="section-number-4">2.2.1</span> <span class="todo TODO">TODO</span> Defining the dataset</h4>
+<div id="outline-container-org582597e" class="outline-4">
+<h4 id="org582597e"><span class="section-number-4">2.2.1</span> <span class="todo TODO">TODO</span> Defining the dataset</h4>
 <div class="outline-text-4" id="text-2-2-1">
 <div class="org-src-container">
 <pre class="src src-python"><span style="color: #81A1C1;">import</span> glob
@@ -500,8 +500,8 @@ along both dimensions.
 </div>
 </div>
 
-<div id="outline-container-orgf4bd512" class="outline-2">
-<h2 id="orgf4bd512"><span class="section-number-2">3</span> References</h2>
+<div id="outline-container-org2839551" class="outline-2">
+<h2 id="org2839551"><span class="section-number-2">3</span> References</h2>
 <div class="outline-text-2" id="text-3">
 <ul class="org-ul">
 <li><a href="http://smartdsp.xmu.edu.cn/derainNet.html">http://smartdsp.xmu.edu.cn/derainNet.html</a></li>
@@ -516,12 +516,12 @@ on Image Processing, vol. 26, no. 6, pp. 2944-2956, 2017.</li>
 </div>
 </div>
 
-<div id="outline-container-org7e236e5" class="outline-2">
-<h2 id="org7e236e5"><span class="section-number-2">4</span> Appendix</h2>
+<div id="outline-container-org9c26bd3" class="outline-2">
+<h2 id="org9c26bd3"><span class="section-number-2">4</span> Appendix</h2>
 <div class="outline-text-2" id="text-4">
 </div>
-<div id="outline-container-org876303d" class="outline-3">
-<h3 id="org876303d"><span class="section-number-3">4.1</span> The Dataset</h3>
+<div id="outline-container-org00cc7bc" class="outline-3">
+<h3 id="org00cc7bc"><span class="section-number-3">4.1</span> The Dataset</h3>
 <div class="outline-text-3" id="text-4-1">
 <p>
 The authors&rsquo; rainy image dataset can be found <a href="http://smartdsp.xmu.edu.cn/memberpdf/fuxueyang/cvpr2017/rainy_image_dataset.zip">here</a>. Unfortunately, that page
@@ -533,8 +533,8 @@ took the liberty of cloning the authors&rsquo; dataset; it is available at
 </div>
 </div>
 
-<div id="outline-container-org06e1edd" class="outline-3">
-<h3 id="org06e1edd"><span class="section-number-3">4.2</span> The Report</h3>
+<div id="outline-container-orgde18235" class="outline-3">
+<h3 id="orgde18235"><span class="section-number-3">4.2</span> The Report</h3>
 <div class="outline-text-3" id="text-4-2">
 <p>
 This article is written with Emacs and <a href="https://orgmode.org/manual/HTML-export.html">Org mode</a> in the <a href="https://www-cs-faculty.stanford.edu/~knuth/lp.html">literate programming</a>
@@ -543,8 +543,8 @@ style.
 </div>
 </div>
 
-<div id="outline-container-orgcfe0f32" class="outline-3">
-<h3 id="orgcfe0f32"><span class="section-number-3">4.3</span> The Site</h3>
+<div id="outline-container-orga9af483" class="outline-3">
+<h3 id="orga9af483"><span class="section-number-3">4.3</span> The Site</h3>
 <div class="outline-text-3" id="text-4-3">
 <p>
 This write-up is also available at <a href="https://jinnovation.github.io/derain-net">jinnovation.github.io/derain-net</a>. It is
@@ -558,7 +558,7 @@ generated using Org-mode&rsquo;s <a href="https://orgmode.org/manual/HTML-export
 <div id="postamble" class="status">
 <p class="date">Date: 2018-04-28 Sat 00:00</p>
 <p class="author">Author: Jonathan Jin</p>
-<p class="date">Created: 2018-04-30 Mon 18:55</p>
+<p class="date">Created: 2018-04-30 Mon 22:39</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>

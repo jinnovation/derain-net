@@ -18,6 +18,8 @@
 
 #+SETUPFILE: theme.setup
 
+#+PROPERTY: header-args:python :eval never-export
+
 * Abstract
 
   We present a re-implementation of the [[https://arxiv.org/pdf/1609.02087v2.pdf][DerainNet method for single-image rain
@@ -47,7 +49,7 @@
 
 *** TODO Defining the dataset
     :PROPERTIES:
-    :header-args: :tangle rainy_image_input.py
+    :header-args: :tangle rainy_image_input.py :session :results none
     :END:
 
     #+BEGIN_SRC python
@@ -97,6 +99,17 @@
               os.path.splitext(os.path.basename(f))[0]
               for f in glob.glob(os.path.join(data_dir, GROUND_TRUTH_DIR, "*.jpg"))
           ]
+    #+END_SRC
+
+    #+BEGIN_SRC python :exports none :results none :tangle rainy_image_input_test.py
+      from unittest import mock
+
+      def test__get_indices():
+          with mock.patch("glob.glob") as MockGlob, \
+              mock.patch("tensorflow.gfile.Exists") as MockExists:
+              MockGlob.return_value = ["../foo/ground truth/1.jpg", "../foo/ground truth/2.jpg"]
+              MockExists.return_value = True
+              assert _get_indices("../foo") == ["1", "2"]
     #+END_SRC
 
     #+BEGIN_COMMENT
