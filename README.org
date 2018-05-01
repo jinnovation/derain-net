@@ -47,7 +47,7 @@
   
 ** DONE Data importing and preparation
    :PROPERTIES:
-   :header-args: :tangle rainy_image_input.py :session :results none
+   :header-args: :tangle rainy_image_input.py :results none
    :END:
 
    #+BEGIN_SRC python
@@ -219,24 +219,22 @@
          dataset = tf.data.Dataset.from_tensor_slices(
              (tf.constant(ins), tf.constant(outs)),
          ).map(_parse_function)
+         print("foo")
 
          return dataset
    #+END_SRC
 
 ** TODO Model Training
    :PROPERTIES:
-   :header-args: :tangle train.py :session :results none
+   :header-args: :tangle train.py :results none :session
    :END:
 
    #+BEGIN_SRC python
      import tensorflow as tf
      import logging
+   #+END_SRC
 
-     LEVEL = tf.logging.DEBUG
-     FLAGS = tf.app.flags.FLAGS
-
-     logging.basicConfig(level=LEVEL)
-
+   #+BEGIN_SRC python
      tf.app.flags.DEFINE_string("checkpoint_dir", "/tmp/derain-checkpoint",
                                 """Directory to write event logs and checkpointing
                                 to.""")
@@ -249,11 +247,16 @@
                                  128,
                                  """Number of images to process in a batch.""")
 
-     tf.app.flags.DEFINE_integer(
-         "max_steps",
-         1000000,
-         """Number of training batches to run.""",
-     )
+     tf.app.flags.DEFINE_integer("max_steps",
+                                 1000000,
+                                 """Number of training batches to run.""")
+   #+END_SRC
+
+   #+BEGIN_SRC python
+     LEVEL = tf.logging.DEBUG
+     FLAGS = tf.app.flags.FLAGS
+
+     logging.basicConfig(level=LEVEL)
 
      log = logging.getLogger("derain-train")
 
@@ -277,14 +280,16 @@
          if tf.gfile.Exists(FLAGS.checkpoint_dir):
              log.debug("Emptying checkpoint dir")
              tf.gfile.DeleteRecursively(FLAGS.checkpoint_dir)
+
          log.debug("Creating checkpoint dir")
          tf.gfile.MakeDirs(FLAGS.checkpoint_dir)
 
          train()
+   #+END_SRC
 
-
+   #+BEGIN_SRC python
      if __name__ == "__main__":
-         log.info("FLAGS: {}".format(FLAGS.max_steps))
+         log.info("FLAGS: {}".format(FLAGS))
          tf.app.run(main)
    #+END_SRC
 
@@ -316,6 +321,7 @@
 
 ** The Site
 
-   This write-up is also available at [[https://jinnovation.github.io/derain-net][jinnovation.github.io/derain-net]]. It is
-   generated using Org-mode's [[https://orgmode.org/manual/HTML-export.html][HTML export functionality]], as well as the
-   [[https://github.com/fniessen/org-html-themes][ReadTheOrg theme]].
+   The source for this write-up, as well as all tangled source files, is hosted
+   at [[https://github.com/jinnovation/derain-net][jinnovation/derain-net]]. This write-up is generated using Org-mode's [[https://orgmode.org/manual/HTML-export.html][HTML
+   export functionality]], as well as the [[https://github.com/fniessen/org-html-themes][ReadTheOrg theme]]. All resulting source
+   files were tangled directly from the write-up document.

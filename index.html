@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2018-05-01 Tue 07:30 -->
+<!-- 2018-05-01 Tue 07:57 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Reimplementing a deep network architecture for single-image rain removal</title>
@@ -248,28 +248,28 @@ for the JavaScript code in this tag.
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org9600837">1. Abstract</a></li>
-<li><a href="#org3ea7baa">2. <span class="todo TODO">TODO</span> <code>[1/2]</code> Development</a>
+<li><a href="#orga34f821">1. Abstract</a></li>
+<li><a href="#org151fc60">2. <span class="todo TODO">TODO</span> <code>[1/2]</code> Development</a>
 <ul>
-<li><a href="#org6c22121">2.1. Preamble</a></li>
-<li><a href="#org7b2b82c">2.2. <span class="done DONE">DONE</span> Data importing and preparation</a></li>
-<li><a href="#org56d2cc2">2.3. <span class="todo TODO">TODO</span> Model Training</a></li>
+<li><a href="#org6c3979f">2.1. Preamble</a></li>
+<li><a href="#org95a40d5">2.2. <span class="done DONE">DONE</span> Data importing and preparation</a></li>
+<li><a href="#org89ef841">2.3. <span class="todo TODO">TODO</span> Model Training</a></li>
 </ul>
 </li>
-<li><a href="#org27493d5">3. References</a></li>
-<li><a href="#org4d2c457">4. Appendix</a>
+<li><a href="#org490f0db">3. References</a></li>
+<li><a href="#org0c14511">4. Appendix</a>
 <ul>
-<li><a href="#org3e45add">4.1. The Dataset</a></li>
-<li><a href="#orga7428d9">4.2. The Report</a></li>
-<li><a href="#org3d7a9ad">4.3. The Site</a></li>
+<li><a href="#orgb35e5bb">4.1. The Dataset</a></li>
+<li><a href="#org064dda6">4.2. The Report</a></li>
+<li><a href="#org29719b1">4.3. The Site</a></li>
 </ul>
 </li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-org9600837" class="outline-2">
-<h2 id="org9600837"><span class="section-number-2">1</span> Abstract</h2>
+<div id="outline-container-orga34f821" class="outline-2">
+<h2 id="orga34f821"><span class="section-number-2">1</span> Abstract</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 We present a re-implementation of the <a href="https://arxiv.org/pdf/1609.02087v2.pdf">DerainNet method for single-image rain
@@ -281,8 +281,8 @@ model definition; model training; and so on.
 </div>
 </div>
 
-<div id="outline-container-org3ea7baa" class="outline-2">
-<h2 id="org3ea7baa"><span class="section-number-2">2</span> <span class="todo TODO">TODO</span> <code>[1/2]</code> Development</h2>
+<div id="outline-container-org151fc60" class="outline-2">
+<h2 id="org151fc60"><span class="section-number-2">2</span> <span class="todo TODO">TODO</span> <code>[1/2]</code> Development</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 We&rsquo;ll split the development process roughly into the following stages:
@@ -294,8 +294,8 @@ We&rsquo;ll split the development process roughly into the following stages:
 </ul>
 </div>
 
-<div id="outline-container-org6c22121" class="outline-3">
-<h3 id="org6c22121"><span class="section-number-3">2.1</span> Preamble</h3>
+<div id="outline-container-org6c3979f" class="outline-3">
+<h3 id="org6c3979f"><span class="section-number-3">2.1</span> Preamble</h3>
 <div class="outline-text-3" id="text-2-1">
 <div class="org-src-container">
 <pre class="src src-bash">virtualenv --system-site-packages -p $(<span style="color: #81A1C1;">which</span> python3) env3
@@ -309,8 +309,8 @@ We&rsquo;ll split the development process roughly into the following stages:
 </div>
 </div>
 
-<div id="outline-container-org7b2b82c" class="outline-3">
-<h3 id="org7b2b82c"><span class="section-number-3">2.2</span> <span class="done DONE">DONE</span> Data importing and preparation</h3>
+<div id="outline-container-org95a40d5" class="outline-3">
+<h3 id="org95a40d5"><span class="section-number-3">2.2</span> <span class="done DONE">DONE</span> Data importing and preparation</h3>
 <div class="outline-text-3" id="text-2-2">
 <div class="org-src-container">
 <pre class="src src-python"><span style="color: #81A1C1;">import</span> glob
@@ -490,6 +490,7 @@ first part of our project.
     <span style="color: #D8DEE9;">dataset</span> = tf.data.Dataset.from_tensor_slices(
         (tf.constant(ins), tf.constant(outs)),
     ).<span style="color: #81A1C1;">map</span>(_parse_function)
+    <span style="color: #81A1C1;">print</span>(<span style="color: #A3BE8C;">"foo"</span>)
 
     <span style="color: #81A1C1;">return</span> dataset
 </pre>
@@ -497,19 +498,17 @@ first part of our project.
 </div>
 </div>
 
-<div id="outline-container-org56d2cc2" class="outline-3">
-<h3 id="org56d2cc2"><span class="section-number-3">2.3</span> <span class="todo TODO">TODO</span> Model Training</h3>
+<div id="outline-container-org89ef841" class="outline-3">
+<h3 id="org89ef841"><span class="section-number-3">2.3</span> <span class="todo TODO">TODO</span> Model Training</h3>
 <div class="outline-text-3" id="text-2-3">
 <div class="org-src-container">
 <pre class="src src-python"><span style="color: #81A1C1;">import</span> tensorflow <span style="color: #81A1C1;">as</span> tf
 <span style="color: #81A1C1;">import</span> logging
+</pre>
+</div>
 
-<span style="color: #D8DEE9;">LEVEL</span> = tf.logging.DEBUG
-<span style="color: #D8DEE9;">FLAGS</span> = tf.app.flags.FLAGS
-
-logging.basicConfig(level=LEVEL)
-
-tf.app.flags.DEFINE_string(<span style="color: #A3BE8C;">"checkpoint_dir"</span>, <span style="color: #A3BE8C;">"/tmp/derain-checkpoint"</span>,
+<div class="org-src-container">
+<pre class="src src-python">tf.app.flags.DEFINE_string(<span style="color: #A3BE8C;">"checkpoint_dir"</span>, <span style="color: #A3BE8C;">"/tmp/derain-checkpoint"</span>,
                            <span style="color: #A3BE8C;">"""Directory to write event logs and checkpointing</span>
 <span style="color: #A3BE8C;">                           to."""</span>)
 
@@ -521,11 +520,17 @@ tf.app.flags.DEFINE_integer(<span style="color: #A3BE8C;">"batch_size"</span>,
                             128,
                             <span style="color: #A3BE8C;">"""Number of images to process in a batch."""</span>)
 
-tf.app.flags.DEFINE_integer(
-    <span style="color: #A3BE8C;">"max_steps"</span>,
-    1000000,
-    <span style="color: #A3BE8C;">"""Number of training batches to run."""</span>,
-)
+tf.app.flags.DEFINE_integer(<span style="color: #A3BE8C;">"max_steps"</span>,
+                            1000000,
+                            <span style="color: #A3BE8C;">"""Number of training batches to run."""</span>)
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #D8DEE9;">LEVEL</span> = tf.logging.DEBUG
+<span style="color: #D8DEE9;">FLAGS</span> = tf.app.flags.FLAGS
+
+logging.basicConfig(level=LEVEL)
 
 <span style="color: #D8DEE9;">log</span> = logging.getLogger(<span style="color: #A3BE8C;">"derain-train"</span>)
 
@@ -549,14 +554,17 @@ tf.app.flags.DEFINE_integer(
     <span style="color: #81A1C1;">if</span> tf.gfile.Exists(FLAGS.checkpoint_dir):
         log.debug(<span style="color: #A3BE8C;">"Emptying checkpoint dir"</span>)
         tf.gfile.DeleteRecursively(FLAGS.checkpoint_dir)
+
     log.debug(<span style="color: #A3BE8C;">"Creating checkpoint dir"</span>)
     tf.gfile.MakeDirs(FLAGS.checkpoint_dir)
 
     train()
+</pre>
+</div>
 
-
-<span style="color: #81A1C1;">if</span> <span style="color: #81A1C1;">__name__</span> == <span style="color: #A3BE8C;">"__main__"</span>:
-    log.info(<span style="color: #A3BE8C;">"FLAGS: {}"</span>.<span style="color: #81A1C1;">format</span>(FLAGS.max_steps))
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #81A1C1;">if</span> <span style="color: #81A1C1;">__name__</span> == <span style="color: #A3BE8C;">"__main__"</span>:
+    log.info(<span style="color: #A3BE8C;">"FLAGS: {}"</span>.<span style="color: #81A1C1;">format</span>(FLAGS))
     tf.app.run(main)
 </pre>
 </div>
@@ -564,8 +572,8 @@ tf.app.flags.DEFINE_integer(
 </div>
 </div>
 
-<div id="outline-container-org27493d5" class="outline-2">
-<h2 id="org27493d5"><span class="section-number-2">3</span> References</h2>
+<div id="outline-container-org490f0db" class="outline-2">
+<h2 id="org490f0db"><span class="section-number-2">3</span> References</h2>
 <div class="outline-text-2" id="text-3">
 <ul class="org-ul">
 <li><a href="http://smartdsp.xmu.edu.cn/derainNet.html">http://smartdsp.xmu.edu.cn/derainNet.html</a></li>
@@ -580,12 +588,12 @@ on Image Processing, vol. 26, no. 6, pp. 2944-2956, 2017.</li>
 </div>
 </div>
 
-<div id="outline-container-org4d2c457" class="outline-2">
-<h2 id="org4d2c457"><span class="section-number-2">4</span> Appendix</h2>
+<div id="outline-container-org0c14511" class="outline-2">
+<h2 id="org0c14511"><span class="section-number-2">4</span> Appendix</h2>
 <div class="outline-text-2" id="text-4">
 </div>
-<div id="outline-container-org3e45add" class="outline-3">
-<h3 id="org3e45add"><span class="section-number-3">4.1</span> The Dataset</h3>
+<div id="outline-container-orgb35e5bb" class="outline-3">
+<h3 id="orgb35e5bb"><span class="section-number-3">4.1</span> The Dataset</h3>
 <div class="outline-text-3" id="text-4-1">
 <p>
 The authors&rsquo; rainy image dataset can be found <a href="http://smartdsp.xmu.edu.cn/memberpdf/fuxueyang/cvpr2017/rainy_image_dataset.zip">here</a>. Unfortunately, that page
@@ -597,8 +605,8 @@ took the liberty of cloning the authors&rsquo; dataset; it is available at
 </div>
 </div>
 
-<div id="outline-container-orga7428d9" class="outline-3">
-<h3 id="orga7428d9"><span class="section-number-3">4.2</span> The Report</h3>
+<div id="outline-container-org064dda6" class="outline-3">
+<h3 id="org064dda6"><span class="section-number-3">4.2</span> The Report</h3>
 <div class="outline-text-3" id="text-4-2">
 <p>
 This article is written with Emacs and <a href="https://orgmode.org/manual/HTML-export.html">Org mode</a> in the <a href="https://www-cs-faculty.stanford.edu/~knuth/lp.html">literate programming</a>
@@ -607,13 +615,14 @@ style.
 </div>
 </div>
 
-<div id="outline-container-org3d7a9ad" class="outline-3">
-<h3 id="org3d7a9ad"><span class="section-number-3">4.3</span> The Site</h3>
+<div id="outline-container-org29719b1" class="outline-3">
+<h3 id="org29719b1"><span class="section-number-3">4.3</span> The Site</h3>
 <div class="outline-text-3" id="text-4-3">
 <p>
-This write-up is also available at <a href="https://jinnovation.github.io/derain-net">jinnovation.github.io/derain-net</a>. It is
-generated using Org-mode&rsquo;s <a href="https://orgmode.org/manual/HTML-export.html">HTML export functionality</a>, as well as the
-<a href="https://github.com/fniessen/org-html-themes">ReadTheOrg theme</a>.
+The source for this write-up, as well as all tangled source files, is hosted
+at <a href="https://github.com/jinnovation/derain-net">jinnovation/derain-net</a>. This write-up is generated using Org-mode&rsquo;s <a href="https://orgmode.org/manual/HTML-export.html">HTML
+export functionality</a>, as well as the <a href="https://github.com/fniessen/org-html-themes">ReadTheOrg theme</a>. All resulting source
+files were tangled directly from the write-up document.
 </p>
 </div>
 </div>
@@ -622,7 +631,7 @@ generated using Org-mode&rsquo;s <a href="https://orgmode.org/manual/HTML-export
 <div id="postamble" class="status">
 <p class="date">Date: 2018-04-28 Sat 00:00</p>
 <p class="author">Author: Jonathan Jin</p>
-<p class="date">Created: 2018-05-01 Tue 07:30</p>
+<p class="date">Created: 2018-05-01 Tue 07:57</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>
