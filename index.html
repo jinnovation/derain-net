@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2018-04-30 Mon 22:39 -->
+<!-- 2018-05-01 Tue 07:24 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Reimplementing a deep network architecture for single-image rain removal</title>
@@ -248,31 +248,28 @@ for the JavaScript code in this tag.
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orgf858406">1. Abstract</a></li>
-<li><a href="#orgcf50538">2. <span class="todo TODO">TODO</span> <code>[0/1]</code> Development</a>
+<li><a href="#orgd8cef3d">1. Abstract</a></li>
+<li><a href="#org6f97c63">2. <span class="todo TODO">TODO</span> <code>[1/2]</code> Development</a>
 <ul>
-<li><a href="#orga3dcdea">2.1. Preamble</a></li>
-<li><a href="#org23f1af9">2.2. <span class="todo TODO">TODO</span> <code>[0/1]</code> Data importing and preparation</a>
-<ul>
-<li><a href="#org582597e">2.2.1. <span class="todo TODO">TODO</span> Defining the dataset</a></li>
+<li><a href="#org0631051">2.1. Preamble</a></li>
+<li><a href="#org37a38cb">2.2. <span class="done DONE">DONE</span> Data importing and preparation</a></li>
+<li><a href="#org123dbb7">2.3. <span class="todo TODO">TODO</span> Model Training</a></li>
 </ul>
 </li>
-</ul>
-</li>
-<li><a href="#org2839551">3. References</a></li>
-<li><a href="#org9c26bd3">4. Appendix</a>
+<li><a href="#orge62a45b">3. References</a></li>
+<li><a href="#org4548799">4. Appendix</a>
 <ul>
-<li><a href="#org00cc7bc">4.1. The Dataset</a></li>
-<li><a href="#orgde18235">4.2. The Report</a></li>
-<li><a href="#orga9af483">4.3. The Site</a></li>
+<li><a href="#org76f4d3f">4.1. The Dataset</a></li>
+<li><a href="#org6604783">4.2. The Report</a></li>
+<li><a href="#org16588d6">4.3. The Site</a></li>
 </ul>
 </li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-orgf858406" class="outline-2">
-<h2 id="orgf858406"><span class="section-number-2">1</span> Abstract</h2>
+<div id="outline-container-orgd8cef3d" class="outline-2">
+<h2 id="orgd8cef3d"><span class="section-number-2">1</span> Abstract</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 We present a re-implementation of the <a href="https://arxiv.org/pdf/1609.02087v2.pdf">DerainNet method for single-image rain
@@ -284,8 +281,8 @@ model definition; model training; and so on.
 </div>
 </div>
 
-<div id="outline-container-orgcf50538" class="outline-2">
-<h2 id="orgcf50538"><span class="section-number-2">2</span> <span class="todo TODO">TODO</span> <code>[0/1]</code> Development</h2>
+<div id="outline-container-org6f97c63" class="outline-2">
+<h2 id="org6f97c63"><span class="section-number-2">2</span> <span class="todo TODO">TODO</span> <code>[1/2]</code> Development</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 We&rsquo;ll split the development process roughly into the following stages:
@@ -297,28 +294,24 @@ We&rsquo;ll split the development process roughly into the following stages:
 </ul>
 </div>
 
-<div id="outline-container-orga3dcdea" class="outline-3">
-<h3 id="orga3dcdea"><span class="section-number-3">2.1</span> Preamble</h3>
+<div id="outline-container-org0631051" class="outline-3">
+<h3 id="org0631051"><span class="section-number-3">2.1</span> Preamble</h3>
 <div class="outline-text-3" id="text-2-1">
 <div class="org-src-container">
-<pre class="src src-bash">virtualenv --system-site-packages -p python2 derain-net
+<pre class="src src-bash">virtualenv --system-site-packages -p $(<span style="color: #81A1C1;">which</span> python3) env3
 </pre>
 </div>
 
 <div class="org-src-container">
-<pre class="src src-emacs-lisp">(pyvenv-activate <span style="color: #A3BE8C;">"./derain-net"</span>)
+<pre class="src src-emacs-lisp">(pyvenv-activate <span style="color: #A3BE8C;">"./env3"</span>)
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org23f1af9" class="outline-3">
-<h3 id="org23f1af9"><span class="section-number-3">2.2</span> <span class="todo TODO">TODO</span> <code>[0/1]</code> Data importing and preparation</h3>
+<div id="outline-container-org37a38cb" class="outline-3">
+<h3 id="org37a38cb"><span class="section-number-3">2.2</span> <span class="done DONE">DONE</span> Data importing and preparation</h3>
 <div class="outline-text-3" id="text-2-2">
-</div>
-<div id="outline-container-org582597e" class="outline-4">
-<h4 id="org582597e"><span class="section-number-4">2.2.1</span> <span class="todo TODO">TODO</span> Defining the dataset</h4>
-<div class="outline-text-4" id="text-2-2-1">
 <div class="org-src-container">
 <pre class="src src-python"><span style="color: #81A1C1;">import</span> glob
 <span style="color: #81A1C1;">import</span> os
@@ -347,7 +340,7 @@ These correspond to our model&rsquo;s expected outputs, as well as the inputs,
 respectively. Likewise, each &ldquo;ground truth&rdquo; image corresponds to one or more
 &ldquo;rainy&rdquo; images according to some &ldquo;index&rdquo; value &#x2013; <code>ground truth/1.jpg</code> to
 <code>rainy image/1_{1,2,3}.jpg</code>, <code>ground truth/100.jpg</code> to <code>rainy
-    image/100_{1,2,3,4,5}</code>, and so on.
+   image/100_{1,2,3,4,5}</code>, and so on.
 </p>
 
 <p>
@@ -408,9 +401,11 @@ output files corresponding to a given set of indices.
         i: glob.glob(os.path.join(directory, <span style="color: #A3BE8C;">"{}_[0-9]*.jpg"</span>.<span style="color: #81A1C1;">format</span>(i)))
         <span style="color: #81A1C1;">for</span> i <span style="color: #81A1C1;">in</span> indices
     }
+</pre>
+</div>
 
-
-<span style="color: #81A1C1;">def</span> <span style="color: #88C0D0;">_get_output_files</span>(data_dir, indices):
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #81A1C1;">def</span> <span style="color: #88C0D0;">_get_output_files</span>(data_dir, indices):
     <span style="color: #4c566a;">"""Get output files from indices.</span>
 
 <span style="color: #4c566a;">    Args:</span>
@@ -449,13 +444,17 @@ along both dimensions.
 </pre>
 </div>
 
+<p>
+Finally, we have our canonical dataset-creation interface, concluding the
+first part of our project.
+</p>
+
 <div class="org-src-container">
-<pre class="src src-python"><span style="color: #81A1C1;">def</span> <span style="color: #88C0D0;">dataset</span>(data_dir, batch_size, indices=<span style="color: #81A1C1;">None</span>):
+<pre class="src src-python"><span style="color: #81A1C1;">def</span> <span style="color: #88C0D0;">dataset</span>(data_dir, indices=<span style="color: #81A1C1;">None</span>):
     <span style="color: #4c566a;">"""Construct dataset for rainy-image evaluation.</span>
 
 <span style="color: #4c566a;">    Args:</span>
 <span style="color: #4c566a;">    data_dir: Path to the data directory.</span>
-<span style="color: #4c566a;">    batch_size: Number of images per batch.</span>
 <span style="color: #4c566a;">    indices: The input-output pairings to return. If None (the default), uses</span>
 <span style="color: #4c566a;">    indices present in the data directory.</span>
 
@@ -470,13 +469,13 @@ along both dimensions.
     <span style="color: #D8DEE9;">fs_out</span> = _get_output_files(data_dir, indices)
 
     <span style="color: #D8DEE9;">ins</span> = [
-        fname <span style="color: #81A1C1;">for</span> k, v <span style="color: #81A1C1;">in</span> <span style="color: #81A1C1;">iter</span>(<span style="color: #81A1C1;">sorted</span>(fs_in.iteritems()))
+        fname <span style="color: #81A1C1;">for</span> k, v <span style="color: #81A1C1;">in</span> <span style="color: #81A1C1;">iter</span>(<span style="color: #81A1C1;">sorted</span>(fs_in.items()))
         <span style="color: #81A1C1;">for</span> fname <span style="color: #81A1C1;">in</span> v <span style="color: #81A1C1;">if</span> k <span style="color: #81A1C1;">in</span> indices
     ]
 
     <span style="color: #D8DEE9;">outs</span> = [v <span style="color: #81A1C1;">for</span> sublist <span style="color: #81A1C1;">in</span> [
         [fname] * <span style="color: #81A1C1;">len</span>(fs_in[k])
-        <span style="color: #81A1C1;">for</span> k, fname <span style="color: #81A1C1;">in</span> <span style="color: #81A1C1;">iter</span>(<span style="color: #81A1C1;">sorted</span>(fs_out.iteritems()))
+        <span style="color: #81A1C1;">for</span> k, fname <span style="color: #81A1C1;">in</span> <span style="color: #81A1C1;">iter</span>(<span style="color: #81A1C1;">sorted</span>(fs_out.items()))
         <span style="color: #81A1C1;">if</span> k <span style="color: #81A1C1;">in</span> indices
     ] <span style="color: #81A1C1;">for</span> v <span style="color: #81A1C1;">in</span> sublist]
 
@@ -492,16 +491,18 @@ along both dimensions.
         (tf.constant(ins), tf.constant(outs)),
     ).<span style="color: #81A1C1;">map</span>(_parse_function)
 
-    <span style="color: #81A1C1;">return</span> dataset.batch(batch_size)
+    <span style="color: #81A1C1;">return</span> dataset
 </pre>
 </div>
 </div>
 </div>
-</div>
-</div>
 
-<div id="outline-container-org2839551" class="outline-2">
-<h2 id="org2839551"><span class="section-number-2">3</span> References</h2>
+<div id="outline-container-org123dbb7" class="outline-3">
+<h3 id="org123dbb7"><span class="section-number-3">2.3</span> <span class="todo TODO">TODO</span> Model Training</h3>
+</div>
+</div>
+<div id="outline-container-orge62a45b" class="outline-2">
+<h2 id="orge62a45b"><span class="section-number-2">3</span> References</h2>
 <div class="outline-text-2" id="text-3">
 <ul class="org-ul">
 <li><a href="http://smartdsp.xmu.edu.cn/derainNet.html">http://smartdsp.xmu.edu.cn/derainNet.html</a></li>
@@ -516,12 +517,12 @@ on Image Processing, vol. 26, no. 6, pp. 2944-2956, 2017.</li>
 </div>
 </div>
 
-<div id="outline-container-org9c26bd3" class="outline-2">
-<h2 id="org9c26bd3"><span class="section-number-2">4</span> Appendix</h2>
+<div id="outline-container-org4548799" class="outline-2">
+<h2 id="org4548799"><span class="section-number-2">4</span> Appendix</h2>
 <div class="outline-text-2" id="text-4">
 </div>
-<div id="outline-container-org00cc7bc" class="outline-3">
-<h3 id="org00cc7bc"><span class="section-number-3">4.1</span> The Dataset</h3>
+<div id="outline-container-org76f4d3f" class="outline-3">
+<h3 id="org76f4d3f"><span class="section-number-3">4.1</span> The Dataset</h3>
 <div class="outline-text-3" id="text-4-1">
 <p>
 The authors&rsquo; rainy image dataset can be found <a href="http://smartdsp.xmu.edu.cn/memberpdf/fuxueyang/cvpr2017/rainy_image_dataset.zip">here</a>. Unfortunately, that page
@@ -533,8 +534,8 @@ took the liberty of cloning the authors&rsquo; dataset; it is available at
 </div>
 </div>
 
-<div id="outline-container-orgde18235" class="outline-3">
-<h3 id="orgde18235"><span class="section-number-3">4.2</span> The Report</h3>
+<div id="outline-container-org6604783" class="outline-3">
+<h3 id="org6604783"><span class="section-number-3">4.2</span> The Report</h3>
 <div class="outline-text-3" id="text-4-2">
 <p>
 This article is written with Emacs and <a href="https://orgmode.org/manual/HTML-export.html">Org mode</a> in the <a href="https://www-cs-faculty.stanford.edu/~knuth/lp.html">literate programming</a>
@@ -543,8 +544,8 @@ style.
 </div>
 </div>
 
-<div id="outline-container-orga9af483" class="outline-3">
-<h3 id="orga9af483"><span class="section-number-3">4.3</span> The Site</h3>
+<div id="outline-container-org16588d6" class="outline-3">
+<h3 id="org16588d6"><span class="section-number-3">4.3</span> The Site</h3>
 <div class="outline-text-3" id="text-4-3">
 <p>
 This write-up is also available at <a href="https://jinnovation.github.io/derain-net">jinnovation.github.io/derain-net</a>. It is
@@ -558,7 +559,7 @@ generated using Org-mode&rsquo;s <a href="https://orgmode.org/manual/HTML-export
 <div id="postamble" class="status">
 <p class="date">Date: 2018-04-28 Sat 00:00</p>
 <p class="author">Author: Jonathan Jin</p>
-<p class="date">Created: 2018-04-30 Mon 22:39</p>
+<p class="date">Created: 2018-05-01 Tue 07:24</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>

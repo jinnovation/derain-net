@@ -28,7 +28,7 @@
   is the use of [[https://www.tensorflow.org][TensorFlow]] for all stages in the workflow: data preparation;
   model definition; model training; and so on.
  
-* TODO [0/1] Development
+* TODO [1/2] Development
 
   We'll split the development process roughly into the following stages:
 
@@ -38,194 +38,192 @@
 ** Preamble
 
    #+BEGIN_SRC bash
-     virtualenv --system-site-packages -p python2 derain-net
+     virtualenv --system-site-packages -p $(which python3) env3
    #+END_SRC
 
    #+BEGIN_SRC emacs-lisp
-     (pyvenv-activate "./derain-net")
+     (pyvenv-activate "./env3")
    #+END_SRC
   
-** TODO [0/1] Data importing and preparation
+** DONE Data importing and preparation
+   :PROPERTIES:
+   :header-args: :tangle rainy_image_input.py :session :results none
+   :END:
 
-*** TODO Defining the dataset
-    :PROPERTIES:
-    :header-args: :tangle rainy_image_input.py :session :results none
-    :END:
+   #+BEGIN_SRC python
+     import glob
+     import os
+     import tensorflow as tf
+   #+END_SRC
 
-    #+BEGIN_SRC python
-      import glob
-      import os
-      import tensorflow as tf
-    #+END_SRC
+   The dataset directory is organized into two folders:
 
-    The dataset directory is organized into two folders:
-
-    - =ground truth= images; and
-    - =rainy= images.
+   - =ground truth= images; and
+   - =rainy= images.
 
 
-    #+BEGIN_SRC python
-      GROUND_TRUTH_DIR = "ground truth"
-      RAINY_IMAGE_DIR = "rainy image"
-    #+END_SRC
+   #+BEGIN_SRC python
+     GROUND_TRUTH_DIR = "ground truth"
+     RAINY_IMAGE_DIR = "rainy image"
+   #+END_SRC
 
-    These correspond to our model's expected outputs, as well as the inputs,
-    respectively. Likewise, each "ground truth" image corresponds to one or more
-    "rainy" images according to some "index" value -- =ground truth/1.jpg= to
-    =rainy image/1_{1,2,3}.jpg=, =ground truth/100.jpg= to =rainy
-    image/100_{1,2,3,4,5}=, and so on.
+   These correspond to our model's expected outputs, as well as the inputs,
+   respectively. Likewise, each "ground truth" image corresponds to one or more
+   "rainy" images according to some "index" value -- =ground truth/1.jpg= to
+   =rainy image/1_{1,2,3}.jpg=, =ground truth/100.jpg= to =rainy
+   image/100_{1,2,3,4,5}=, and so on.
 
-    With this topology in mind, we can define a function to retrieve all index
-    values within the data directory:
+   With this topology in mind, we can define a function to retrieve all index
+   values within the data directory:
 
-    #+BEGIN_SRC python
-      def _get_indices(data_dir):
-          """Get indices for input/output association.
+   #+BEGIN_SRC python
+     def _get_indices(data_dir):
+         """Get indices for input/output association.
 
-          Args:
-          data_dir: Path to the data directory.
+         Args:
+         data_dir: Path to the data directory.
 
-          Returns:
-          indices: List of numerical index values.
+         Returns:
+         indices: List of numerical index values.
 
-          Raises:
-          ValueError: If no data_dir or no ground-truth dir.
-          """
+         Raises:
+         ValueError: If no data_dir or no ground-truth dir.
+         """
 
-          if not tf.gfile.Exists(os.path.join(data_dir, GROUND_TRUTH_DIR)):
-              raise ValueError("Failed to find ground-truth directory.")
+         if not tf.gfile.Exists(os.path.join(data_dir, GROUND_TRUTH_DIR)):
+             raise ValueError("Failed to find ground-truth directory.")
 
-          return [
-              os.path.splitext(os.path.basename(f))[0]
-              for f in glob.glob(os.path.join(data_dir, GROUND_TRUTH_DIR, "*.jpg"))
-          ]
-    #+END_SRC
+         return [
+             os.path.splitext(os.path.basename(f))[0]
+             for f in glob.glob(os.path.join(data_dir, GROUND_TRUTH_DIR, "*.jpg"))
+         ]
+   #+END_SRC
 
-    #+BEGIN_SRC python :exports none :results none :tangle rainy_image_input_test.py
-      from unittest import mock
+   #+BEGIN_SRC python :exports none :results none :tangle rainy_image_input_test.py
+     from unittest import mock
 
-      def test__get_indices():
-          with mock.patch("glob.glob") as MockGlob, \
-              mock.patch("tensorflow.gfile.Exists") as MockExists:
-              MockGlob.return_value = ["../foo/ground truth/1.jpg", "../foo/ground truth/2.jpg"]
-              MockExists.return_value = True
-              assert _get_indices("../foo") == ["1", "2"]
-    #+END_SRC
+     def test__get_indices():
+         with mock.patch("glob.glob") as MockGlob, \
+             mock.patch("tensorflow.gfile.Exists") as MockExists:
+             MockGlob.return_value = ["../foo/ground truth/1.jpg", "../foo/ground truth/2.jpg"]
+             MockExists.return_value = True
+             assert _get_indices("../foo") == ["1", "2"]
+   #+END_SRC
 
-    #+BEGIN_COMMENT
-    TODO: Unit tests.
-    #+END_COMMENT
+   Likewise, we can define functions to retrieve the filenames of all input and
+   output files corresponding to a given set of indices.
 
-    Likewise, we can define functions to retrieve the filenames of all input and
-    output files corresponding to a given set of indices.
+   #+BEGIN_SRC python
+     def _get_input_files(data_dir, indices):
+         """Get input files from indices.
 
-    #+BEGIN_SRC python
-      def _get_input_files(data_dir, indices):
-          """Get input files from indices.
+         Args:
+         data_dir: Path to the data directory.
+         indices: List of numerical index values.
 
-          Args:
-          data_dir: Path to the data directory.
-          indices: List of numerical index values.
+         Returns:
+         Dictionary, keyed by index value, valued by string lists containing
+         one or more filenames.
 
-          Returns:
-          Dictionary, keyed by index value, valued by string lists containing
-          one or more filenames.
+         Raises:
+         ValueError: If no rainy-image dir.
+         """
 
-          Raises:
-          ValueError: If no rainy-image dir.
-          """
+         directory = os.path.join(data_dir, RAINY_IMAGE_DIR)
+         if not tf.gfile.Exists(directory):
+             raise ValueError("Failed to find rainy-image directory.")
 
-          directory = os.path.join(data_dir, RAINY_IMAGE_DIR)
-          if not tf.gfile.Exists(directory):
-              raise ValueError("Failed to find rainy-image directory.")
+         return {
+             i: glob.glob(os.path.join(directory, "{}_[0-9]*.jpg".format(i)))
+             for i in indices
+         }
+   #+END_SRC
 
-          return {
-              i: glob.glob(os.path.join(directory, "{}_[0-9]*.jpg".format(i)))
-              for i in indices
-          }
+   #+BEGIN_SRC python
+     def _get_output_files(data_dir, indices):
+         """Get output files from indices.
 
+         Args:
+         data_dir: Path to the data directory.
+         indices: List of numerical index values.
 
-      def _get_output_files(data_dir, indices):
-          """Get output files from indices.
+         Returns:
+         outputs: Dictionary, keyed by index value, valued by stsring lists
+         containing one or more filenames.
 
-          Args:
-          data_dir: Path to the data directory.
-          indices: List of numerical index values.
+         Raises:
+         ValueError: If no ground-truth dir.
+         """
 
-          Returns:
-          outputs: Dictionary, keyed by index value, valued by stsring lists
-          containing one or more filenames.
+         directory = os.path.join(data_dir, GROUND_TRUTH_DIR)
+         if not tf.gfile.Exists(directory):
+             raise ValueError("Failed to find ground-truth directory.")
 
-          Raises:
-          ValueError: If no ground-truth dir.
-          """
+         return {
+             i: os.path.join(directory, "{}.jpg".format(i)) for i in indices
+         }
+   #+END_SRC
 
-          directory = os.path.join(data_dir, GROUND_TRUTH_DIR)
-          if not tf.gfile.Exists(directory):
-              raise ValueError("Failed to find ground-truth directory.")
+   Now we arrive at our first deviation from the author's implementation. The
+   authors, in their paper, don't seem to perform any standardized cropping on
+   their images, relying on the inputs to all be identical in resolution or, at
+   most, flipped, e.g. =384x512= and =512x384=. Here, to ease integration with
+   TensorFlow, we settle on a common length to truncate inputs and outputs by
+   along both dimensions.
 
-          return {
-              i: os.path.join(directory, "{}.jpg".format(i)) for i in indices
-          }
-    #+END_SRC
+   #+BEGIN_SRC python
+     IMAGE_SIZE = 384
+   #+END_SRC
 
-    Now we arrive at our first deviation from the author's implementation. The
-    authors, in their paper, don't seem to perform any standardized cropping on
-    their images, relying on the inputs to all be identical in resolution or, at
-    most, flipped, e.g. =384x512= and =512x384=. Here, to ease integration with
-    TensorFlow, we settle on a common length to truncate inputs and outputs by
-    along both dimensions.
+   Finally, we have our canonical dataset-creation interface, concluding the
+   first part of our project.
 
-    #+BEGIN_SRC python
-      IMAGE_SIZE = 384
-    #+END_SRC
+   #+BEGIN_SRC python
+     def dataset(data_dir, indices=None):
+         """Construct dataset for rainy-image evaluation.
 
-    #+BEGIN_SRC python
-      def dataset(data_dir, batch_size, indices=None):
-          """Construct dataset for rainy-image evaluation.
+         Args:
+         data_dir: Path to the data directory.
+         indices: The input-output pairings to return. If None (the default), uses
+         indices present in the data directory.
 
-          Args:
-          data_dir: Path to the data directory.
-          batch_size: Number of images per batch.
-          indices: The input-output pairings to return. If None (the default), uses
-          indices present in the data directory.
+         Returns:
+         dataset: Dataset of input-output images.
+         """
 
-          Returns:
-          dataset: Dataset of input-output images.
-          """
+         if not indices:
+             indices = _get_indices(data_dir)
 
-          if not indices:
-              indices = _get_indices(data_dir)
+         fs_in = _get_input_files(data_dir, indices)
+         fs_out = _get_output_files(data_dir, indices)
 
-          fs_in = _get_input_files(data_dir, indices)
-          fs_out = _get_output_files(data_dir, indices)
+         ins = [
+             fname for k, v in iter(sorted(fs_in.items()))
+             for fname in v if k in indices
+         ]
 
-          ins = [
-              fname for k, v in iter(sorted(fs_in.iteritems()))
-              for fname in v if k in indices
-          ]
+         outs = [v for sublist in [
+             [fname] * len(fs_in[k])
+             for k, fname in iter(sorted(fs_out.items()))
+             if k in indices
+         ] for v in sublist]
 
-          outs = [v for sublist in [
-              [fname] * len(fs_in[k])
-              for k, fname in iter(sorted(fs_out.iteritems()))
-              if k in indices
-          ] for v in sublist]
+         def _parse_function(fname_in, fname_out):
+             def _decode_resize(fname):
+                 return tf.image.resize_image_with_crop_or_pad(
+                     tf.image.decode_jpeg(fname), IMAGE_SIZE, IMAGE_SIZE,
+                 )
 
-          def _parse_function(fname_in, fname_out):
-              def _decode_resize(fname):
-                  return tf.image.resize_image_with_crop_or_pad(
-                      tf.image.decode_jpeg(fname), IMAGE_SIZE, IMAGE_SIZE,
-                  )
+             return _decode_resize(fname_in), _decode_resize(fname_out)
 
-              return _decode_resize(fname_in), _decode_resize(fname_out)
+         dataset = tf.data.Dataset.from_tensor_slices(
+             (tf.constant(ins), tf.constant(outs)),
+         ).map(_parse_function)
 
-          dataset = tf.data.Dataset.from_tensor_slices(
-              (tf.constant(ins), tf.constant(outs)),
-          ).map(_parse_function)
+         return dataset
+   #+END_SRC
 
-          return dataset.batch(batch_size)
-    #+END_SRC
-
+** TODO Model Training
 * References
 
   - http://smartdsp.xmu.edu.cn/derainNet.html

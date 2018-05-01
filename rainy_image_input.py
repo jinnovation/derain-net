@@ -50,7 +50,6 @@ def _get_input_files(data_dir, indices):
         for i in indices
     }
 
-
 def _get_output_files(data_dir, indices):
     """Get output files from indices.
 
@@ -76,12 +75,11 @@ def _get_output_files(data_dir, indices):
 
 IMAGE_SIZE = 384
 
-def dataset(data_dir, batch_size, indices=None):
+def dataset(data_dir, indices=None):
     """Construct dataset for rainy-image evaluation.
 
     Args:
     data_dir: Path to the data directory.
-    batch_size: Number of images per batch.
     indices: The input-output pairings to return. If None (the default), uses
     indices present in the data directory.
 
@@ -96,13 +94,13 @@ def dataset(data_dir, batch_size, indices=None):
     fs_out = _get_output_files(data_dir, indices)
 
     ins = [
-        fname for k, v in iter(sorted(fs_in.iteritems()))
+        fname for k, v in iter(sorted(fs_in.items()))
         for fname in v if k in indices
     ]
 
     outs = [v for sublist in [
         [fname] * len(fs_in[k])
-        for k, fname in iter(sorted(fs_out.iteritems()))
+        for k, fname in iter(sorted(fs_out.items()))
         if k in indices
     ] for v in sublist]
 
@@ -118,4 +116,4 @@ def dataset(data_dir, batch_size, indices=None):
         (tf.constant(ins), tf.constant(outs)),
     ).map(_parse_function)
 
-    return dataset.batch(batch_size)
+    return dataset
