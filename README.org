@@ -219,7 +219,6 @@
          dataset = tf.data.Dataset.from_tensor_slices(
              (tf.constant(ins), tf.constant(outs)),
          ).map(_parse_function)
-         print("foo")
 
          return dataset
    #+END_SRC
@@ -228,70 +227,128 @@
    :PROPERTIES:
    :header-args: :tangle train.py :results none :session
    :END:
+   
+*** Dependencies
 
-   #+BEGIN_SRC python
-     import tensorflow as tf
-     import logging
-   #+END_SRC
+    #+BEGIN_SRC python
+      import tensorflow as tf
+      import logging
+      from rainy_image_input import dataset
+    #+END_SRC
+    
+*** Execution Environment
 
-   #+BEGIN_SRC python
-     tf.app.flags.DEFINE_string("checkpoint_dir", "/tmp/derain-checkpoint",
-                                """Directory to write event logs and checkpointing
-                                to.""")
+    #+BEGIN_SRC python
+      tf.app.flags.DEFINE_string("checkpoint_dir", "/tmp/derain-checkpoint",
+                                 """Directory to write event logs and checkpointing
+                                 to.""")
 
-     tf.app.flags.DEFINE_string("data_dir",
-                                "/tmp/derain_data",
-                                """Path to the derain data directory.""")
+      tf.app.flags.DEFINE_string("data_dir",
+                                 "/tmp/derain_data",
+                                 """Path to the derain data directory.""")
 
-     tf.app.flags.DEFINE_integer("batch_size",
-                                 128,
-                                 """Number of images to process in a batch.""")
+      tf.app.flags.DEFINE_integer("batch_size",
+                                  128,
+                                  """Number of images to process in a batch.""")
 
-     tf.app.flags.DEFINE_integer("max_steps",
-                                 1000000,
-                                 """Number of training batches to run.""")
-   #+END_SRC
+      tf.app.flags.DEFINE_integer("max_steps",
+                                  1000000,
+                                  """Number of training batches to run.""")
 
-   #+BEGIN_SRC python
-     LEVEL = tf.logging.DEBUG
-     FLAGS = tf.app.flags.FLAGS
+      LEVEL = tf.logging.DEBUG
+      FLAGS = tf.app.flags.FLAGS
 
-     logging.basicConfig(level=LEVEL)
+      logging.basicConfig(level=LEVEL)
 
-     log = logging.getLogger("derain-train")
+      LOG = logging.getLogger("derain-train")
+    #+END_SRC
+  
+*** Input Function 
+
+    First, let's set up the input function for our [[https://www.tensorflow.org/programmers_guide/estimators][Estimator]], using the accessor
+    abstraction we introduced earlier:
+
+    #+BEGIN_SRC python
+      def dataset_input_fn():
+          ds = dataset("../rainy-image-dataset", [1,2,3,4,5])
+
+          return ds.make_one_shot_iterator().get_next()
+    #+END_SRC
+   
+*** Defining the model
+
+    #+BEGIN_SRC python
+      MODEL_DEFAULT_PARAMS = {
+          "learn_rate": 0.01,
+      }
 
 
-     def train():
-         with tf.Graph().as_default():
-             global_step = tf.train.get_or_create_global_step()
+      def model_fn(features, labels, mode, params):
+          assert mode = tf.estimator.ModeKeys.TRAIN
 
-             c = tf.constant("Hello")
-             with tf.train.MonitoredTrainingSession(
-                     hooks=[
-                         tf.train.StopAtStepHook(last_step=FLAGS.max_steps),
-                     ],
-             ) as train_session:
-                 while not train_session.should_stop():
-                     res = train_session.run(c)
-                     log.debug(res)
+          params = {**MODEL_DEFAULT_PARAMS, **params}
+
+          # TODO:
+          # outline the network w/ Keras
+
+          # TODO: mean frobenius loss
+          loss = pass
+
+          optimizer = tf.keras.optimizers.SGD(
+              lr=params["learning_rate"],
+              momentum=0.0,
+              decay=0.0,
+              nesterov=False,
+          )
+
+          train_op = optimizer.minimize(loss, global_step=tf.train.get_global_step())
+
+          return tf.estimator.EstimatorSpec(mode, loss=loss, train_op=train_op)
 
 
-     def main(argv=None):
-         if tf.gfile.Exists(FLAGS.checkpoint_dir):
-             log.debug("Emptying checkpoint dir")
-             tf.gfile.DeleteRecursively(FLAGS.checkpoint_dir)
+      def get_estimator():
+          return tf.estimator.Estimator(
+              model_fn=model_fn,
+              config=pass,
+              params=pass,
+          )
+    #+END_SRC
+    
+*** The Rest of the Owl
 
-         log.debug("Creating checkpoint dir")
-         tf.gfile.MakeDirs(FLAGS.checkpoint_dir)
+    #+BEGIN_SRC python
+      def train():
+          with tf.Graph().as_default():
+              global_step = tf.train.get_or_create_global_step()
 
-         train()
-   #+END_SRC
+              c = tf.constant("Hello")
+              with tf.train.MonitoredTrainingSession(
+                      checkpoint_dir=FLAGS.checkpoint_dir,
+                      hooks=[
+                          tf.train.StopAtStepHook(last_step=FLAGS.max_steps),
+                      ],
+              ) as train_session:
+                  while not train_session.should_stop():
+                      res = train_session.run(c)
+                      LOG.debug(res)
 
-   #+BEGIN_SRC python
-     if __name__ == "__main__":
-         log.info("FLAGS: {}".format(FLAGS))
-         tf.app.run(main)
-   #+END_SRC
+
+      def main(argv=None):
+          if tf.gfile.Exists(FLAGS.checkpoint_dir):
+              LOG.debug("Emptying checkpoint dir")
+              tf.gfile.DeleteRecursively(FLAGS.checkpoint_dir)
+
+          LOG.debug("Creating checkpoint dir")
+          tf.gfile.MakeDirs(FLAGS.checkpoint_dir)
+
+          train()
+    #+END_SRC
+
+    #+BEGIN_SRC python
+      if __name__ == "__main__":
+          LOG.info("FLAGS: {}".format(FLAGS))
+          tf.app.run(main)
+    #+END_SRC
 
 * References
 
