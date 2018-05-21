@@ -233,7 +233,7 @@
     #+BEGIN_SRC python
       import tensorflow as tf
       import logging
-      from rainy_image_input import dataset
+      from rainy_image_input import dataset, IMAGE_SIZE
     #+END_SRC
     
 *** Execution Environment
@@ -284,26 +284,51 @@
 
 
       def model_fn(features, labels, mode, params):
-          assert mode = tf.estimator.ModeKeys.TRAIN
-
           params = {**MODEL_DEFAULT_PARAMS, **params}
 
-          # TODO:
-          # outline the network w/ Keras
+          l = tf.keras.layers
+          model = tf.keras.Sequential([
+              # 512 kernels of 16x16x3
+              l.Conv2D(
+                  512,
+                  (16, 16),
+                  input_shape=(IMAGE_SIZE, IMAGE_SIZE, 3),
+                  use_bias = True,
+                  activation=tf.nn.tanh,
+              ),
+              # 512 kernels of 1x1x512
+              l.Conv2D(
+                  512,
+                  (1, 1),
+                  use_bias = True,
+                  activation=tf.nn.tanh,
+              ),
+              # 3 kernels of 8x8x512 (one for each color channel)
+              l.Conv2D(
+                  3,
+                  (8, 8),
+                  use_bias = True,
+              ),
+          ])
 
           # TODO: mean frobenius loss
           loss = pass
 
-          optimizer = tf.keras.optimizers.SGD(
-              lr=params["learning_rate"],
-              momentum=0.0,
-              decay=0.0,
-              nesterov=False,
-          )
+          if mode == tf.ModeKeys.TRAIN:
+              optimizer = tf.keras.optimizers.SGD(
+                  lr=params["learning_rate"],
+                  momentum=0.0,
+                  decay=0.0,
+                  nesterov=False,
+              )
 
-          train_op = optimizer.minimize(loss, global_step=tf.train.get_global_step())
+              train_op = optimizer.minimize(
+                  loss, global_step=tf.train.get_global_step())
 
-          return tf.estimator.EstimatorSpec(mode, loss=loss, train_op=train_op)
+              # TODO: handle each of ModeKeys.{EVAL,TRAIN,PREDICT}
+              return tf.estimator.EstimatorSpec(mode, loss=loss, train_op=train_op)
+
+          raise NotImplementedError
 
 
       def get_estimator():

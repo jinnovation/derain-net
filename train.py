@@ -36,26 +36,47 @@ MODEL_DEFAULT_PARAMS = {
 
 
 def model_fn(features, labels, mode, params):
-    assert mode = tf.estimator.ModeKeys.TRAIN
-
     params = {**MODEL_DEFAULT_PARAMS, **params}
 
     # TODO:
-    # outline the network w/ Keras
+    l = tf.keras.layers
+    model = tf.keras.Sequential([
+        # 512 kernels of 16x16x3
+        l.Conv3D(
+            512,
+            (16, 16, 3),
+            input_shape=pass,
+        ),
+        # TODO: 512 kernels of 1x1x512
+        l.Conv3D(
+            512,
+            (1, 1, 512),
+        ),
+        # TODO: 3 kernels of 8x8x512 (one for each color channel)
+        l.Conv3D(
+            3,
+            (8, 8, 512),
+        ),
+    ])
 
     # TODO: mean frobenius loss
     loss = pass
 
-    optimizer = tf.keras.optimizers.SGD(
-        lr=params["learning_rate"],
-        momentum=0.0,
-        decay=0.0,
-        nesterov=False,
-    )
+    if mode == tf.ModeKeys.TRAIN:
+        optimizer = tf.keras.optimizers.SGD(
+            lr=params["learning_rate"],
+            momentum=0.0,
+            decay=0.0,
+            nesterov=False,
+        )
 
-    train_op = optimizer.minimize(loss, global_step=tf.train.get_global_step())
+        train_op = optimizer.minimize(
+            loss, global_step=tf.train.get_global_step())
 
-    return tf.estimator.EstimatorSpec(mode, loss=loss, train_op=train_op)
+        # TODO: handle each of ModeKeys.{EVAL,TRAIN,PREDICT}
+        return tf.estimator.EstimatorSpec(mode, loss=loss, train_op=train_op)
+
+    raise NotImplementedError
 
 
 def get_estimator():
