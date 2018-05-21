@@ -213,9 +213,13 @@
 
          def _parse_function(fname_in, fname_out):
              def _decode_resize(fname):
-                 return tf.image.resize_image_with_crop_or_pad(
-                     tf.image.decode_jpeg(tf.read_file(fname)), IMAGE_SIZE, IMAGE_SIZE,
+                 f = tf.read_file(fname)
+                 contents = tf.image.decode_jpeg(f)
+                 resized = tf.image.resize_image_with_crop_or_pad(
+                     contents, IMAGE_SIZE, IMAGE_SIZE,
                  )
+                 casted = tf.cast(resized, tf.float32)
+                 return casted
 
              return _decode_resize(fname_in), _decode_resize(fname_out)
 
@@ -287,12 +291,11 @@
 
 
       def model_fn(features, labels, mode, params):
+          inputs = features
+          LOG.debug(inputs)
           global_step = tf.train.get_global_step()
 
           params = {**MODEL_DEFAULT_PARAMS, **params}
-
-          # TODO
-          inputs = None
 
           l = tf.keras.layers
           model = tf.keras.Sequential([
@@ -348,8 +351,6 @@
       def train():
           with tf.Graph().as_default():
               global_step = tf.train.get_or_create_global_step()
-
-              c = tf.constant("Hello")
 
               regressor = tf.estimator.Estimator(
                   model_fn=model_fn,

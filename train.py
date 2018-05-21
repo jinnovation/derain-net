@@ -36,12 +36,11 @@ MODEL_DEFAULT_PARAMS = {
 
 
 def model_fn(features, labels, mode, params):
+    inputs = features
+    LOG.debug(inputs)
     global_step = tf.train.get_global_step()
 
     params = {**MODEL_DEFAULT_PARAMS, **params}
-
-    # TODO
-    inputs = None
 
     l = tf.keras.layers
     model = tf.keras.Sequential([
@@ -93,8 +92,6 @@ def model_fn(features, labels, mode, params):
 def train():
     with tf.Graph().as_default():
         global_step = tf.train.get_or_create_global_step()
-
-        c = tf.constant("Hello")
 
         regressor = tf.estimator.Estimator(
             model_fn=model_fn,
