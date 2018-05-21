@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2018-05-21 Mon 03:08 -->
+<!-- 2018-05-21 Mon 16:25 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Reimplementing a deep network architecture for single-image rain removal</title>
@@ -248,36 +248,35 @@ for the JavaScript code in this tag.
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orgcb01519">1. Abstract</a></li>
-<li><a href="#orga80b465">2. <span class="todo TODO">TODO</span> <code>[1/2]</code> Development</a>
+<li><a href="#org9268e84">1. Abstract</a></li>
+<li><a href="#org44ddde2">2. <span class="todo TODO">TODO</span> <code>[1/2]</code> Development</a>
 <ul>
-<li><a href="#org14bf597">2.1. Preamble</a></li>
-<li><a href="#orgc5131cc">2.2. <span class="done DONE">DONE</span> Data importing and preparation</a></li>
-<li><a href="#org1f0d2dd">2.3. <span class="todo TODO">TODO</span> Model Training</a>
+<li><a href="#org93394e0">2.1. <span class="done DONE">DONE</span> Data importing and preparation</a></li>
+<li><a href="#org33b5836">2.2. <span class="todo TODO">TODO</span> Model Training</a>
 <ul>
-<li><a href="#orgdd95cad">2.3.1. Dependencies</a></li>
-<li><a href="#org5fb6235">2.3.2. Execution Environment</a></li>
-<li><a href="#org6a9efda">2.3.3. Input Function</a></li>
-<li><a href="#org52570b0">2.3.4. Defining the model</a></li>
-<li><a href="#org272ed97">2.3.5. The Rest of the Owl</a></li>
+<li><a href="#org42acec4">2.2.1. Dependencies</a></li>
+<li><a href="#orgcf6b027">2.2.2. Execution Environment</a></li>
+<li><a href="#org2ebc091">2.2.3. Input Function</a></li>
+<li><a href="#orgc2b9861">2.2.4. Defining the model</a></li>
+<li><a href="#org5249777">2.2.5. The Rest of the Owl</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#orga181e9a">3. References</a></li>
-<li><a href="#org6e24102">4. Appendix</a>
+<li><a href="#org52f70d0">3. References</a></li>
+<li><a href="#org49c3958">4. Appendix</a>
 <ul>
-<li><a href="#org5fb7107">4.1. The Dataset</a></li>
-<li><a href="#org218451b">4.2. The Report</a></li>
-<li><a href="#org0e9e788">4.3. The Site</a></li>
+<li><a href="#org47bddf8">4.1. The Dataset</a></li>
+<li><a href="#orgf09564c">4.2. The Report</a></li>
+<li><a href="#org98be076">4.3. The Site</a></li>
 </ul>
 </li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-orgcb01519" class="outline-2">
-<h2 id="orgcb01519"><span class="section-number-2">1</span> Abstract</h2>
+<div id="outline-container-org9268e84" class="outline-2">
+<h2 id="org9268e84"><span class="section-number-2">1</span> Abstract</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 We present a re-implementation of the <a href="https://arxiv.org/pdf/1609.02087v2.pdf">DerainNet method for single-image rain
@@ -289,8 +288,8 @@ model definition; model training; and so on.
 </div>
 </div>
 
-<div id="outline-container-orga80b465" class="outline-2">
-<h2 id="orga80b465"><span class="section-number-2">2</span> <span class="todo TODO">TODO</span> <code>[1/2]</code> Development</h2>
+<div id="outline-container-org44ddde2" class="outline-2">
+<h2 id="org44ddde2"><span class="section-number-2">2</span> <span class="todo TODO">TODO</span> <code>[1/2]</code> Development</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 We&rsquo;ll split the development process roughly into the following stages:
@@ -302,24 +301,9 @@ We&rsquo;ll split the development process roughly into the following stages:
 </ul>
 </div>
 
-<div id="outline-container-org14bf597" class="outline-3">
-<h3 id="org14bf597"><span class="section-number-3">2.1</span> Preamble</h3>
+<div id="outline-container-org93394e0" class="outline-3">
+<h3 id="org93394e0"><span class="section-number-3">2.1</span> <span class="done DONE">DONE</span> Data importing and preparation</h3>
 <div class="outline-text-3" id="text-2-1">
-<div class="org-src-container">
-<pre class="src src-bash">virtualenv --system-site-packages -p $(<span style="color: #81A1C1;">which</span> python3) env3
-</pre>
-</div>
-
-<div class="org-src-container">
-<pre class="src src-emacs-lisp">(pyvenv-activate <span style="color: #A3BE8C;">"./env3"</span>)
-</pre>
-</div>
-</div>
-</div>
-
-<div id="outline-container-orgc5131cc" class="outline-3">
-<h3 id="orgc5131cc"><span class="section-number-3">2.2</span> <span class="done DONE">DONE</span> Data importing and preparation</h3>
-<div class="outline-text-3" id="text-2-2">
 <div class="org-src-container">
 <pre class="src src-python"><span style="color: #81A1C1;">import</span> glob
 <span style="color: #81A1C1;">import</span> os
@@ -505,14 +489,14 @@ first part of our project.
 </div>
 </div>
 
-<div id="outline-container-org1f0d2dd" class="outline-3">
-<h3 id="org1f0d2dd"><span class="section-number-3">2.3</span> <span class="todo TODO">TODO</span> Model Training</h3>
-<div class="outline-text-3" id="text-2-3">
+<div id="outline-container-org33b5836" class="outline-3">
+<h3 id="org33b5836"><span class="section-number-3">2.2</span> <span class="todo TODO">TODO</span> Model Training</h3>
+<div class="outline-text-3" id="text-2-2">
 </div>
 
-<div id="outline-container-orgdd95cad" class="outline-4">
-<h4 id="orgdd95cad"><span class="section-number-4">2.3.1</span> Dependencies</h4>
-<div class="outline-text-4" id="text-2-3-1">
+<div id="outline-container-org42acec4" class="outline-4">
+<h4 id="org42acec4"><span class="section-number-4">2.2.1</span> Dependencies</h4>
+<div class="outline-text-4" id="text-2-2-1">
 <div class="org-src-container">
 <pre class="src src-python"><span style="color: #81A1C1;">import</span> tensorflow <span style="color: #81A1C1;">as</span> tf
 <span style="color: #81A1C1;">import</span> logging
@@ -522,9 +506,9 @@ first part of our project.
 </div>
 </div>
 
-<div id="outline-container-org5fb6235" class="outline-4">
-<h4 id="org5fb6235"><span class="section-number-4">2.3.2</span> Execution Environment</h4>
-<div class="outline-text-4" id="text-2-3-2">
+<div id="outline-container-orgcf6b027" class="outline-4">
+<h4 id="orgcf6b027"><span class="section-number-4">2.2.2</span> Execution Environment</h4>
+<div class="outline-text-4" id="text-2-2-2">
 <div class="org-src-container">
 <pre class="src src-python">tf.app.flags.DEFINE_string(<span style="color: #A3BE8C;">"checkpoint_dir"</span>, <span style="color: #A3BE8C;">"/tmp/derain-checkpoint"</span>,
                            <span style="color: #A3BE8C;">"""Directory to write event logs and checkpointing</span>
@@ -553,9 +537,9 @@ logging.basicConfig(level=LEVEL)
 </div>
 </div>
 
-<div id="outline-container-org6a9efda" class="outline-4">
-<h4 id="org6a9efda"><span class="section-number-4">2.3.3</span> Input Function</h4>
-<div class="outline-text-4" id="text-2-3-3">
+<div id="outline-container-org2ebc091" class="outline-4">
+<h4 id="org2ebc091"><span class="section-number-4">2.2.3</span> Input Function</h4>
+<div class="outline-text-4" id="text-2-2-3">
 <p>
 First, let&rsquo;s set up the input function for our <a href="https://www.tensorflow.org/programmers_guide/estimators">Estimator</a>, using the accessor
 abstraction we introduced earlier:
@@ -571,9 +555,9 @@ abstraction we introduced earlier:
 </div>
 </div>
 
-<div id="outline-container-org52570b0" class="outline-4">
-<h4 id="org52570b0"><span class="section-number-4">2.3.4</span> Defining the model</h4>
-<div class="outline-text-4" id="text-2-3-4">
+<div id="outline-container-orgc2b9861" class="outline-4">
+<h4 id="orgc2b9861"><span class="section-number-4">2.2.4</span> Defining the model</h4>
+<div class="outline-text-4" id="text-2-2-4">
 <div class="org-src-container">
 <pre class="src src-python"><span style="color: #D8DEE9;">MODEL_DEFAULT_PARAMS</span> = {
     <span style="color: #A3BE8C;">"learn_rate"</span>: 0.01,
@@ -639,9 +623,9 @@ abstraction we introduced earlier:
 </div>
 </div>
 
-<div id="outline-container-org272ed97" class="outline-4">
-<h4 id="org272ed97"><span class="section-number-4">2.3.5</span> The Rest of the Owl</h4>
-<div class="outline-text-4" id="text-2-3-5">
+<div id="outline-container-org5249777" class="outline-4">
+<h4 id="org5249777"><span class="section-number-4">2.2.5</span> The Rest of the Owl</h4>
+<div class="outline-text-4" id="text-2-2-5">
 <div class="org-src-container">
 <pre class="src src-python"><span style="color: #81A1C1;">def</span> <span style="color: #88C0D0;">train</span>():
     <span style="color: #81A1C1;">with</span> tf.Graph().as_default():
@@ -682,8 +666,8 @@ abstraction we introduced earlier:
 </div>
 </div>
 
-<div id="outline-container-orga181e9a" class="outline-2">
-<h2 id="orga181e9a"><span class="section-number-2">3</span> References</h2>
+<div id="outline-container-org52f70d0" class="outline-2">
+<h2 id="org52f70d0"><span class="section-number-2">3</span> References</h2>
 <div class="outline-text-2" id="text-3">
 <ul class="org-ul">
 <li><a href="http://smartdsp.xmu.edu.cn/derainNet.html">http://smartdsp.xmu.edu.cn/derainNet.html</a></li>
@@ -698,12 +682,12 @@ on Image Processing, vol. 26, no. 6, pp. 2944-2956, 2017.</li>
 </div>
 </div>
 
-<div id="outline-container-org6e24102" class="outline-2">
-<h2 id="org6e24102"><span class="section-number-2">4</span> Appendix</h2>
+<div id="outline-container-org49c3958" class="outline-2">
+<h2 id="org49c3958"><span class="section-number-2">4</span> Appendix</h2>
 <div class="outline-text-2" id="text-4">
 </div>
-<div id="outline-container-org5fb7107" class="outline-3">
-<h3 id="org5fb7107"><span class="section-number-3">4.1</span> The Dataset</h3>
+<div id="outline-container-org47bddf8" class="outline-3">
+<h3 id="org47bddf8"><span class="section-number-3">4.1</span> The Dataset</h3>
 <div class="outline-text-3" id="text-4-1">
 <p>
 The authors&rsquo; rainy image dataset can be found <a href="http://smartdsp.xmu.edu.cn/memberpdf/fuxueyang/cvpr2017/rainy_image_dataset.zip">here</a>. Unfortunately, that page
@@ -715,8 +699,8 @@ took the liberty of cloning the authors&rsquo; dataset; it is available at
 </div>
 </div>
 
-<div id="outline-container-org218451b" class="outline-3">
-<h3 id="org218451b"><span class="section-number-3">4.2</span> The Report</h3>
+<div id="outline-container-orgf09564c" class="outline-3">
+<h3 id="orgf09564c"><span class="section-number-3">4.2</span> The Report</h3>
 <div class="outline-text-3" id="text-4-2">
 <p>
 This article is written with Emacs and <a href="https://orgmode.org/manual/HTML-export.html">Org mode</a> in the <a href="https://www-cs-faculty.stanford.edu/~knuth/lp.html">literate programming</a>
@@ -725,8 +709,8 @@ style.
 </div>
 </div>
 
-<div id="outline-container-org0e9e788" class="outline-3">
-<h3 id="org0e9e788"><span class="section-number-3">4.3</span> The Site</h3>
+<div id="outline-container-org98be076" class="outline-3">
+<h3 id="org98be076"><span class="section-number-3">4.3</span> The Site</h3>
 <div class="outline-text-3" id="text-4-3">
 <p>
 The source for this write-up, as well as all tangled source files, is hosted
@@ -741,7 +725,7 @@ files were tangled directly from the write-up document.
 <div id="postamble" class="status">
 <p class="date">Date: 2018-04-28 Sat 00:00</p>
 <p class="author">Author: Jonathan Jin</p>
-<p class="date">Created: 2018-05-21 Mon 03:08</p>
+<p class="date">Created: 2018-05-21 Mon 16:25</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>

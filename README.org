@@ -1,4 +1,4 @@
-# -*- after-save-hook: (org-html-export-to-html org-babel-tangle); -*-
+# -*- after-save-hook: (org-html-export-to-html org-babel-tangle); pyvenv-activate: "./env3"; -*-
 
 #+TITLE: Reimplementing a deep network architecture for single-image rain removal
 #+AUTHOR: Jonathan Jin
@@ -34,16 +34,6 @@
 
   - Data importing/preparation;
   - Model training.
-  
-** Preamble
-
-   #+BEGIN_SRC bash
-     virtualenv --system-site-packages -p $(which python3) env3
-   #+END_SRC
-
-   #+BEGIN_SRC emacs-lisp
-     (pyvenv-activate "./env3")
-   #+END_SRC
   
 ** DONE Data importing and preparation
    :PROPERTIES:
