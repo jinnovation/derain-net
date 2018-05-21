@@ -36,7 +36,12 @@ MODEL_DEFAULT_PARAMS = {
 
 
 def model_fn(features, labels, mode, params):
+    global_step = tf.train.get_global_step()
+
     params = {**MODEL_DEFAULT_PARAMS, **params}
+
+    # TODO
+    inputs = None
 
     l = tf.keras.layers
     model = tf.keras.Sequential([
@@ -63,47 +68,46 @@ def model_fn(features, labels, mode, params):
         ),
     ])
 
-    # TODO: mean frobenius loss
-    loss = pass
 
-    if mode == tf.ModeKeys.TRAIN:
+    # TODO: handle each of ModeKeys.{EVAL,TRAIN,PREDICT}
+    if mode == tf.estimator.ModeKeys.TRAIN:
+        predictions = model(inputs, training=True)
+
+        # TODO: mean frobenius loss
+        # tf.norm(truth - predictions, ord="fro")
+        loss = None
+
         optimizer = tf.keras.optimizers.SGD(
-            lr=params["learning_rate"],
+            lr=params["learn_rate"],
             momentum=0.0,
             decay=0.0,
             nesterov=False,
         )
 
-        train_op = optimizer.minimize(
-            loss, global_step=tf.train.get_global_step())
+        train_op = optimizer.minimize(loss, global_step=global_step)
 
-        # TODO: handle each of ModeKeys.{EVAL,TRAIN,PREDICT}
         return tf.estimator.EstimatorSpec(mode, loss=loss, train_op=train_op)
 
     raise NotImplementedError
-
-
-def get_estimator():
-    return tf.estimator.Estimator(
-        model_fn=model_fn,
-        config=pass,
-        params=pass,
-    )
 
 def train():
     with tf.Graph().as_default():
         global_step = tf.train.get_or_create_global_step()
 
         c = tf.constant("Hello")
-        with tf.train.MonitoredTrainingSession(
-                checkpoint_dir=FLAGS.checkpoint_dir,
-                hooks=[
-                    tf.train.StopAtStepHook(last_step=FLAGS.max_steps),
-                ],
-        ) as train_session:
-            while not train_session.should_stop():
-                res = train_session.run(c)
-                LOG.debug(res)
+
+        regressor = tf.estimator.Estimator(
+            model_fn=model_fn,
+            model_dir=FLAGS.checkpoint_dir,
+            # TODO
+            config=None,
+            params={},
+        )
+
+        regressor.train(
+            input_fn=dataset_input_fn,
+            steps=FLAGS.max_steps,
+        )
 
 
 def main(argv=None):
@@ -117,5 +121,4 @@ def main(argv=None):
     train()
 
 if __name__ == "__main__":
-    LOG.info("FLAGS: {}".format(FLAGS))
     tf.app.run(main)

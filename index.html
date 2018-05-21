@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2018-05-21 Mon 16:25 -->
+<!-- 2018-05-21 Mon 17:16 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Reimplementing a deep network architecture for single-image rain removal</title>
@@ -248,35 +248,35 @@ for the JavaScript code in this tag.
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org9268e84">1. Abstract</a></li>
-<li><a href="#org44ddde2">2. <span class="todo TODO">TODO</span> <code>[1/2]</code> Development</a>
+<li><a href="#org500a34b">1. Abstract</a></li>
+<li><a href="#org94b7042">2. <span class="todo TODO">TODO</span> <code>[1/2]</code> Development</a>
 <ul>
-<li><a href="#org93394e0">2.1. <span class="done DONE">DONE</span> Data importing and preparation</a></li>
-<li><a href="#org33b5836">2.2. <span class="todo TODO">TODO</span> Model Training</a>
+<li><a href="#org1ef8c14">2.1. <span class="done DONE">DONE</span> Data importing and preparation</a></li>
+<li><a href="#org0b0b8e5">2.2. <span class="todo TODO">TODO</span> Model Training</a>
 <ul>
-<li><a href="#org42acec4">2.2.1. Dependencies</a></li>
-<li><a href="#orgcf6b027">2.2.2. Execution Environment</a></li>
-<li><a href="#org2ebc091">2.2.3. Input Function</a></li>
-<li><a href="#orgc2b9861">2.2.4. Defining the model</a></li>
-<li><a href="#org5249777">2.2.5. The Rest of the Owl</a></li>
+<li><a href="#org78b3a41">2.2.1. Dependencies</a></li>
+<li><a href="#org1a85b17">2.2.2. Execution Environment</a></li>
+<li><a href="#orge9268d0">2.2.3. Input Function</a></li>
+<li><a href="#org01f7f15">2.2.4. Defining the model</a></li>
+<li><a href="#orgbc5e512">2.2.5. The Rest of the Owl</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#org52f70d0">3. References</a></li>
-<li><a href="#org49c3958">4. Appendix</a>
+<li><a href="#org65a7c16">3. References</a></li>
+<li><a href="#org2eccd11">4. Appendix</a>
 <ul>
-<li><a href="#org47bddf8">4.1. The Dataset</a></li>
-<li><a href="#orgf09564c">4.2. The Report</a></li>
-<li><a href="#org98be076">4.3. The Site</a></li>
+<li><a href="#orgebfc394">4.1. The Dataset</a></li>
+<li><a href="#org064ae8c">4.2. The Report</a></li>
+<li><a href="#orga042307">4.3. The Site</a></li>
 </ul>
 </li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-org9268e84" class="outline-2">
-<h2 id="org9268e84"><span class="section-number-2">1</span> Abstract</h2>
+<div id="outline-container-org500a34b" class="outline-2">
+<h2 id="org500a34b"><span class="section-number-2">1</span> Abstract</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 We present a re-implementation of the <a href="https://arxiv.org/pdf/1609.02087v2.pdf">DerainNet method for single-image rain
@@ -288,8 +288,8 @@ model definition; model training; and so on.
 </div>
 </div>
 
-<div id="outline-container-org44ddde2" class="outline-2">
-<h2 id="org44ddde2"><span class="section-number-2">2</span> <span class="todo TODO">TODO</span> <code>[1/2]</code> Development</h2>
+<div id="outline-container-org94b7042" class="outline-2">
+<h2 id="org94b7042"><span class="section-number-2">2</span> <span class="todo TODO">TODO</span> <code>[1/2]</code> Development</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 We&rsquo;ll split the development process roughly into the following stages:
@@ -301,8 +301,8 @@ We&rsquo;ll split the development process roughly into the following stages:
 </ul>
 </div>
 
-<div id="outline-container-org93394e0" class="outline-3">
-<h3 id="org93394e0"><span class="section-number-3">2.1</span> <span class="done DONE">DONE</span> Data importing and preparation</h3>
+<div id="outline-container-org1ef8c14" class="outline-3">
+<h3 id="org1ef8c14"><span class="section-number-3">2.1</span> <span class="done DONE">DONE</span> Data importing and preparation</h3>
 <div class="outline-text-3" id="text-2-1">
 <div class="org-src-container">
 <pre class="src src-python"><span style="color: #81A1C1;">import</span> glob
@@ -489,13 +489,13 @@ first part of our project.
 </div>
 </div>
 
-<div id="outline-container-org33b5836" class="outline-3">
-<h3 id="org33b5836"><span class="section-number-3">2.2</span> <span class="todo TODO">TODO</span> Model Training</h3>
+<div id="outline-container-org0b0b8e5" class="outline-3">
+<h3 id="org0b0b8e5"><span class="section-number-3">2.2</span> <span class="todo TODO">TODO</span> Model Training</h3>
 <div class="outline-text-3" id="text-2-2">
 </div>
 
-<div id="outline-container-org42acec4" class="outline-4">
-<h4 id="org42acec4"><span class="section-number-4">2.2.1</span> Dependencies</h4>
+<div id="outline-container-org78b3a41" class="outline-4">
+<h4 id="org78b3a41"><span class="section-number-4">2.2.1</span> Dependencies</h4>
 <div class="outline-text-4" id="text-2-2-1">
 <div class="org-src-container">
 <pre class="src src-python"><span style="color: #81A1C1;">import</span> tensorflow <span style="color: #81A1C1;">as</span> tf
@@ -506,8 +506,8 @@ first part of our project.
 </div>
 </div>
 
-<div id="outline-container-orgcf6b027" class="outline-4">
-<h4 id="orgcf6b027"><span class="section-number-4">2.2.2</span> Execution Environment</h4>
+<div id="outline-container-org1a85b17" class="outline-4">
+<h4 id="org1a85b17"><span class="section-number-4">2.2.2</span> Execution Environment</h4>
 <div class="outline-text-4" id="text-2-2-2">
 <div class="org-src-container">
 <pre class="src src-python">tf.app.flags.DEFINE_string(<span style="color: #A3BE8C;">"checkpoint_dir"</span>, <span style="color: #A3BE8C;">"/tmp/derain-checkpoint"</span>,
@@ -537,8 +537,8 @@ logging.basicConfig(level=LEVEL)
 </div>
 </div>
 
-<div id="outline-container-org2ebc091" class="outline-4">
-<h4 id="org2ebc091"><span class="section-number-4">2.2.3</span> Input Function</h4>
+<div id="outline-container-orge9268d0" class="outline-4">
+<h4 id="orge9268d0"><span class="section-number-4">2.2.3</span> Input Function</h4>
 <div class="outline-text-4" id="text-2-2-3">
 <p>
 First, let&rsquo;s set up the input function for our <a href="https://www.tensorflow.org/programmers_guide/estimators">Estimator</a>, using the accessor
@@ -555,8 +555,8 @@ abstraction we introduced earlier:
 </div>
 </div>
 
-<div id="outline-container-orgc2b9861" class="outline-4">
-<h4 id="orgc2b9861"><span class="section-number-4">2.2.4</span> Defining the model</h4>
+<div id="outline-container-org01f7f15" class="outline-4">
+<h4 id="org01f7f15"><span class="section-number-4">2.2.4</span> Defining the model</h4>
 <div class="outline-text-4" id="text-2-2-4">
 <div class="org-src-container">
 <pre class="src src-python"><span style="color: #D8DEE9;">MODEL_DEFAULT_PARAMS</span> = {
@@ -565,7 +565,12 @@ abstraction we introduced earlier:
 
 
 <span style="color: #81A1C1;">def</span> <span style="color: #88C0D0;">model_fn</span>(features, labels, mode, params):
+    <span style="color: #D8DEE9;">global_step</span> = tf.train.get_global_step()
+
     <span style="color: #D8DEE9;">params</span> = {**MODEL_DEFAULT_PARAMS, **params}
+
+    <span style="color: #4c566a;"># </span><span style="color: #4c566a;">TODO</span>
+    <span style="color: #D8DEE9;">inputs</span> = <span style="color: #81A1C1;">None</span>
 
     <span style="color: #D8DEE9;">l</span> = tf.keras.layers
     <span style="color: #D8DEE9;">model</span> = tf.keras.Sequential([
@@ -592,39 +597,34 @@ abstraction we introduced earlier:
         ),
     ])
 
-    <span style="color: #4c566a;"># </span><span style="color: #4c566a;">TODO: mean frobenius loss</span>
-    <span style="color: #D8DEE9;">loss</span> = <span style="color: #81A1C1;">pass</span>
 
-    <span style="color: #81A1C1;">if</span> mode == tf.ModeKeys.TRAIN:
+    <span style="color: #4c566a;"># </span><span style="color: #4c566a;">TODO: handle each of ModeKeys.{EVAL,TRAIN,PREDICT}</span>
+    <span style="color: #81A1C1;">if</span> mode == tf.estimator.ModeKeys.TRAIN:
+        <span style="color: #D8DEE9;">predictions</span> = model(inputs, training=<span style="color: #81A1C1;">True</span>)
+
+        <span style="color: #4c566a;"># </span><span style="color: #4c566a;">TODO: mean frobenius loss</span>
+        <span style="color: #4c566a;"># </span><span style="color: #4c566a;">tf.norm(truth - predictions, ord="fro")</span>
+        <span style="color: #D8DEE9;">loss</span> = <span style="color: #81A1C1;">None</span>
+
         <span style="color: #D8DEE9;">optimizer</span> = tf.keras.optimizers.SGD(
-            lr=params[<span style="color: #A3BE8C;">"learning_rate"</span>],
+            lr=params[<span style="color: #A3BE8C;">"learn_rate"</span>],
             momentum=0.0,
             decay=0.0,
             nesterov=<span style="color: #81A1C1;">False</span>,
         )
 
-        <span style="color: #D8DEE9;">train_op</span> = optimizer.minimize(
-            loss, global_step=tf.train.get_global_step())
+        <span style="color: #D8DEE9;">train_op</span> = optimizer.minimize(loss, global_step=global_step)
 
-        <span style="color: #4c566a;"># </span><span style="color: #4c566a;">TODO: handle each of ModeKeys.{EVAL,TRAIN,PREDICT}</span>
         <span style="color: #81A1C1;">return</span> tf.estimator.EstimatorSpec(mode, loss=loss, train_op=train_op)
 
     <span style="color: #81A1C1;">raise</span> <span style="color: #8FBCBB;">NotImplementedError</span>
-
-
-<span style="color: #81A1C1;">def</span> <span style="color: #88C0D0;">get_estimator</span>():
-    <span style="color: #81A1C1;">return</span> tf.estimator.Estimator(
-        model_fn=model_fn,
-        config=<span style="color: #81A1C1;">pass</span>,
-        params=<span style="color: #81A1C1;">pass</span>,
-    )
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org5249777" class="outline-4">
-<h4 id="org5249777"><span class="section-number-4">2.2.5</span> The Rest of the Owl</h4>
+<div id="outline-container-orgbc5e512" class="outline-4">
+<h4 id="orgbc5e512"><span class="section-number-4">2.2.5</span> The Rest of the Owl</h4>
 <div class="outline-text-4" id="text-2-2-5">
 <div class="org-src-container">
 <pre class="src src-python"><span style="color: #81A1C1;">def</span> <span style="color: #88C0D0;">train</span>():
@@ -632,15 +632,19 @@ abstraction we introduced earlier:
         <span style="color: #D8DEE9;">global_step</span> = tf.train.get_or_create_global_step()
 
         <span style="color: #D8DEE9;">c</span> = tf.constant(<span style="color: #A3BE8C;">"Hello"</span>)
-        <span style="color: #81A1C1;">with</span> tf.train.MonitoredTrainingSession(
-                checkpoint_dir=FLAGS.checkpoint_dir,
-                hooks=[
-                    tf.train.StopAtStepHook(last_step=FLAGS.max_steps),
-                ],
-        ) <span style="color: #81A1C1;">as</span> train_session:
-            <span style="color: #81A1C1;">while</span> <span style="color: #81A1C1;">not</span> train_session.should_stop():
-                <span style="color: #D8DEE9;">res</span> = train_session.run(c)
-                LOG.debug(res)
+
+        <span style="color: #D8DEE9;">regressor</span> = tf.estimator.Estimator(
+            model_fn=model_fn,
+            model_dir=FLAGS.checkpoint_dir,
+            <span style="color: #4c566a;"># </span><span style="color: #4c566a;">TODO</span>
+            config=<span style="color: #81A1C1;">None</span>,
+            params={},
+        )
+
+        regressor.train(
+            input_fn=dataset_input_fn,
+            steps=FLAGS.max_steps,
+        )
 
 
 <span style="color: #81A1C1;">def</span> <span style="color: #88C0D0;">main</span>(argv=<span style="color: #81A1C1;">None</span>):
@@ -657,7 +661,6 @@ abstraction we introduced earlier:
 
 <div class="org-src-container">
 <pre class="src src-python"><span style="color: #81A1C1;">if</span> <span style="color: #81A1C1;">__name__</span> == <span style="color: #A3BE8C;">"__main__"</span>:
-    LOG.info(<span style="color: #A3BE8C;">"FLAGS: {}"</span>.<span style="color: #81A1C1;">format</span>(FLAGS))
     tf.app.run(main)
 </pre>
 </div>
@@ -666,8 +669,8 @@ abstraction we introduced earlier:
 </div>
 </div>
 
-<div id="outline-container-org52f70d0" class="outline-2">
-<h2 id="org52f70d0"><span class="section-number-2">3</span> References</h2>
+<div id="outline-container-org65a7c16" class="outline-2">
+<h2 id="org65a7c16"><span class="section-number-2">3</span> References</h2>
 <div class="outline-text-2" id="text-3">
 <ul class="org-ul">
 <li><a href="http://smartdsp.xmu.edu.cn/derainNet.html">http://smartdsp.xmu.edu.cn/derainNet.html</a></li>
@@ -682,12 +685,12 @@ on Image Processing, vol. 26, no. 6, pp. 2944-2956, 2017.</li>
 </div>
 </div>
 
-<div id="outline-container-org49c3958" class="outline-2">
-<h2 id="org49c3958"><span class="section-number-2">4</span> Appendix</h2>
+<div id="outline-container-org2eccd11" class="outline-2">
+<h2 id="org2eccd11"><span class="section-number-2">4</span> Appendix</h2>
 <div class="outline-text-2" id="text-4">
 </div>
-<div id="outline-container-org47bddf8" class="outline-3">
-<h3 id="org47bddf8"><span class="section-number-3">4.1</span> The Dataset</h3>
+<div id="outline-container-orgebfc394" class="outline-3">
+<h3 id="orgebfc394"><span class="section-number-3">4.1</span> The Dataset</h3>
 <div class="outline-text-3" id="text-4-1">
 <p>
 The authors&rsquo; rainy image dataset can be found <a href="http://smartdsp.xmu.edu.cn/memberpdf/fuxueyang/cvpr2017/rainy_image_dataset.zip">here</a>. Unfortunately, that page
@@ -699,8 +702,8 @@ took the liberty of cloning the authors&rsquo; dataset; it is available at
 </div>
 </div>
 
-<div id="outline-container-orgf09564c" class="outline-3">
-<h3 id="orgf09564c"><span class="section-number-3">4.2</span> The Report</h3>
+<div id="outline-container-org064ae8c" class="outline-3">
+<h3 id="org064ae8c"><span class="section-number-3">4.2</span> The Report</h3>
 <div class="outline-text-3" id="text-4-2">
 <p>
 This article is written with Emacs and <a href="https://orgmode.org/manual/HTML-export.html">Org mode</a> in the <a href="https://www-cs-faculty.stanford.edu/~knuth/lp.html">literate programming</a>
@@ -709,8 +712,8 @@ style.
 </div>
 </div>
 
-<div id="outline-container-org98be076" class="outline-3">
-<h3 id="org98be076"><span class="section-number-3">4.3</span> The Site</h3>
+<div id="outline-container-orga042307" class="outline-3">
+<h3 id="orga042307"><span class="section-number-3">4.3</span> The Site</h3>
 <div class="outline-text-3" id="text-4-3">
 <p>
 The source for this write-up, as well as all tangled source files, is hosted
@@ -725,7 +728,7 @@ files were tangled directly from the write-up document.
 <div id="postamble" class="status">
 <p class="date">Date: 2018-04-28 Sat 00:00</p>
 <p class="author">Author: Jonathan Jin</p>
-<p class="date">Created: 2018-05-21 Mon 16:25</p>
+<p class="date">Created: 2018-05-21 Mon 17:16</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>
