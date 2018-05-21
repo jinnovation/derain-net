@@ -40,6 +40,19 @@
    :header-args: :tangle rainy_image_input.py :results none
    :END:
 
+   For starters, we'll need to implement the gateway into our training and
+   evaluation data. We'll do so using the =tf.data.Dataset= API; see [[https://www.tensorflow.org/programmers_guide/datasets][TensorFlow
+   > Develop > Programmer's Guide > Importing Data]] for more details.
+
+   #+NAME: get-tangled-fname
+   #+BEGIN_SRC emacs-lisp :exports none :tangle no
+     (let* ((header-args (org-entry-get-multivalued-property (point) "header-args"))
+           (i-tangle (seq-position header-args ":tangle")))
+       (file-name-base (elt header-args (+ i-tangle 1))))
+   #+END_SRC
+
+   These contents will comprise our call_get-tangled-fname() module.
+
    #+BEGIN_SRC python
      import glob
      import os
