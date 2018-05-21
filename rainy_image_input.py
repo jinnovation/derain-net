@@ -107,7 +107,7 @@ def dataset(data_dir, indices=None):
     def _parse_function(fname_in, fname_out):
         def _decode_resize(fname):
             return tf.image.resize_image_with_crop_or_pad(
-                tf.image.decode_jpeg(fname), IMAGE_SIZE, IMAGE_SIZE,
+                tf.image.decode_jpeg(tf.read_file(fname)), IMAGE_SIZE, IMAGE_SIZE,
             )
 
         return _decode_resize(fname_in), _decode_resize(fname_out)
