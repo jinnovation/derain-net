@@ -1,6 +1,6 @@
 import tensorflow as tf
 import logging
-from rainy_image_input import dataset
+from rainy_image_input import dataset, IMAGE_SIZE
 
 tf.app.flags.DEFINE_string("checkpoint_dir", "/tmp/derain-checkpoint",
                            """Directory to write event logs and checkpointing
@@ -26,7 +26,7 @@ logging.basicConfig(level=LEVEL)
 LOG = logging.getLogger("derain-train")
 
 def dataset_input_fn():
-    ds = dataset("../rainy-image-dataset", [1,2,3,4,5])
+    ds = dataset("../rainy-image-dataset", [1,2,3,4,5]).batch(1)
 
     return ds.make_one_shot_iterator().get_next()
 
@@ -38,24 +38,28 @@ MODEL_DEFAULT_PARAMS = {
 def model_fn(features, labels, mode, params):
     params = {**MODEL_DEFAULT_PARAMS, **params}
 
-    # TODO:
     l = tf.keras.layers
     model = tf.keras.Sequential([
         # 512 kernels of 16x16x3
-        l.Conv3D(
+        l.Conv2D(
             512,
-            (16, 16, 3),
-            input_shape=pass,
+            (16, 16),
+            input_shape=(IMAGE_SIZE, IMAGE_SIZE, 3),
+            use_bias = True,
+            activation=tf.nn.tanh,
         ),
-        # TODO: 512 kernels of 1x1x512
-        l.Conv3D(
+        # 512 kernels of 1x1x512
+        l.Conv2D(
             512,
-            (1, 1, 512),
+            (1, 1),
+            use_bias = True,
+            activation=tf.nn.tanh,
         ),
-        # TODO: 3 kernels of 8x8x512 (one for each color channel)
-        l.Conv3D(
+        # 3 kernels of 8x8x512 (one for each color channel)
+        l.Conv2D(
             3,
-            (8, 8, 512),
+            (8, 8),
+            use_bias = True,
         ),
     ])
 
