@@ -21,15 +21,11 @@ tf.app.flags.DEFINE_integer("max_steps",
 LEVEL = tf.logging.DEBUG
 FLAGS = tf.app.flags.FLAGS
 
-tf.logging.set_verbosity(LEVEL)
-
 LOG = logging.getLogger("derain-train")
 
 def dataset_input_fn():
     # TODO: use FLAGS.batch_size
-    ds = dataset(FLAGS.data_dir, range(1, 25)).batch(1)
-
-    return ds.make_one_shot_iterator().get_next()
+    return dataset(FLAGS.data_dir, range(1, 2)).batch(1)
 
 MODEL_DEFAULT_PARAMS = {
     "learn_rate": 0.01,
@@ -39,7 +35,7 @@ MODEL_DEFAULT_PARAMS = {
 def model_fn(features, labels, mode, params):
     inputs = features
     tf.summary.image("inputs", inputs)
-    global_step = tf.train.get_global_step()
+    global_step = tf.train.get_or_create_global_step()
 
     params = {**MODEL_DEFAULT_PARAMS, **params}
 
@@ -123,4 +119,5 @@ def main(argv=None):
     train()
 
 if __name__ == "__main__":
+    tf.logging.set_verbosity(LEVEL)
     tf.app.run(main)

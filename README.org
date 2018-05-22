@@ -265,8 +265,6 @@
       LEVEL = tf.logging.DEBUG
       FLAGS = tf.app.flags.FLAGS
 
-      tf.logging.set_verbosity(LEVEL)
-
       LOG = logging.getLogger("derain-train")
     #+END_SRC
   
@@ -278,9 +276,7 @@
     #+BEGIN_SRC python
       def dataset_input_fn():
           # TODO: use FLAGS.batch_size
-          ds = dataset(FLAGS.data_dir, range(1, 25)).batch(1)
-
-          return ds.make_one_shot_iterator().get_next()
+          return dataset(FLAGS.data_dir, range(1, 2)).batch(1)
     #+END_SRC
    
 *** Defining the model
@@ -294,7 +290,7 @@
       def model_fn(features, labels, mode, params):
           inputs = features
           tf.summary.image("inputs", inputs)
-          global_step = tf.train.get_global_step()
+          global_step = tf.train.get_or_create_global_step()
 
           params = {**MODEL_DEFAULT_PARAMS, **params}
 
@@ -384,6 +380,7 @@
 
     #+BEGIN_SRC python
       if __name__ == "__main__":
+          tf.logging.set_verbosity(LEVEL)
           tf.app.run(main)
     #+END_SRC
 
