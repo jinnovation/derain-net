@@ -21,7 +21,7 @@ tf.app.flags.DEFINE_integer("max_steps",
 LEVEL = tf.logging.DEBUG
 FLAGS = tf.app.flags.FLAGS
 
-logging.basicConfig(level=LEVEL)
+tf.logging.set_verbosity(LEVEL)
 
 LOG = logging.getLogger("derain-train")
 
@@ -98,21 +98,18 @@ def model_fn(features, labels, mode, params):
     raise NotImplementedError
 
 def train():
-    with tf.Graph().as_default():
-        global_step = tf.train.get_or_create_global_step()
+    regressor = tf.estimator.Estimator(
+        model_fn=model_fn,
+        model_dir=FLAGS.checkpoint_dir,
+        # TODO
+        config=None,
+        params={},
+    )
 
-        regressor = tf.estimator.Estimator(
-            model_fn=model_fn,
-            model_dir=FLAGS.checkpoint_dir,
-            # TODO
-            config=None,
-            params={},
-        )
-
-        regressor.train(
-            input_fn=dataset_input_fn,
-            steps=FLAGS.max_steps,
-        )
+    regressor.train(
+        input_fn=dataset_input_fn,
+        steps=FLAGS.max_steps,
+    )
 
 
 def main(argv=None):
