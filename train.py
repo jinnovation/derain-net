@@ -38,6 +38,7 @@ MODEL_DEFAULT_PARAMS = {
 
 def model_fn(features, labels, mode, params):
     inputs = features
+    tf.summary.image("inputs", inputs)
     global_step = tf.train.get_global_step()
 
     params = {**MODEL_DEFAULT_PARAMS, **params}
@@ -75,12 +76,24 @@ def model_fn(features, labels, mode, params):
 
         norm = tf.norm(inputs - predictions, ord="fro", axis=[-2, -1])
         loss = tf.reduce_mean(norm, 1)
+        tf.summary.scalar("loss", loss)
 
         optimizer = tf.train.GradientDescentOptimizer(params["learn_rate"])
 
         train_op = optimizer.minimize(loss, global_step=global_step)
 
-        return tf.estimator.EstimatorSpec(mode, loss=loss, train_op=train_op)
+        return tf.estimator.EstimatorSpec(
+            mode,
+            loss=loss,
+            train_op=train_op,
+            training_hooks=[
+                tf.train.LoggingTensorHook(
+                    ["loss", "inputs"],
+                    # TODO: parameterize
+                    every_n_iter=3,
+                )
+            ],
+        )
 
     raise NotImplementedError
 
