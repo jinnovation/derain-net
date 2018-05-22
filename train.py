@@ -26,7 +26,8 @@ logging.basicConfig(level=LEVEL)
 LOG = logging.getLogger("derain-train")
 
 def dataset_input_fn():
-    ds = dataset("../rainy-image-dataset", [1,2,3,4,5]).batch(1)
+    # TODO: use FLAGS.batch_size
+    ds = dataset(FLAGS.data_dir, range(1, 25)).batch(1)
 
     return ds.make_one_shot_iterator().get_next()
 
