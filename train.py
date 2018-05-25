@@ -23,10 +23,6 @@ FLAGS = tf.app.flags.FLAGS
 
 LOG = logging.getLogger("derain-train")
 
-def dataset_input_fn():
-    # TODO: use FLAGS.batch_size
-    return dataset(FLAGS.data_dir, range(1, 2)).batch(1)
-
 MODEL_DEFAULT_PARAMS = {
     "learn_rate": 0.01,
 }
@@ -103,7 +99,7 @@ def train():
     )
 
     regressor.train(
-        input_fn=dataset_input_fn,
+        input_fn=lambda: dataset(FLAGS.data_dir, range(1, 6)).batch(2),
         steps=FLAGS.max_steps,
     )
 

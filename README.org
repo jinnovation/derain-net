@@ -268,17 +268,6 @@
       LOG = logging.getLogger("derain-train")
     #+END_SRC
   
-*** Input Function 
-
-    First, let's set up the input function for our [[https://www.tensorflow.org/programmers_guide/estimators][Estimator]], using the accessor
-    abstraction we introduced earlier:
-
-    #+BEGIN_SRC python
-      def dataset_input_fn():
-          # TODO: use FLAGS.batch_size
-          return dataset(FLAGS.data_dir, range(1, 2)).batch(1)
-    #+END_SRC
-   
 *** Defining the model
 
     #+BEGIN_SRC python
@@ -362,7 +351,7 @@
           )
 
           regressor.train(
-              input_fn=dataset_input_fn,
+              input_fn=lambda: dataset(FLAGS.data_dir, range(1, 6)).batch(2),
               steps=FLAGS.max_steps,
           )
 
