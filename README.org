@@ -5,15 +5,6 @@
 #+DATE: <2018-04-28 Sat>
 #+EMAIL: jjin082693@gmail.com
 
-#+HTML_HEAD:    <!-- Global site tag (gtag.js) - Google Analytics -->
-#+HTML_HEAD:    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-42551205-2"></script>
-#+HTML_HEAD:    <script>
-#+HTML_HEAD:    window.dataLayer = window.dataLayer || [];
-#+HTML_HEAD:    function gtag(){dataLayer.push(arguments);}
-#+HTML_HEAD:    gtag('js', new Date());
-#+HTML_HEAD:    gtag('config', 'UA-42551205-2');
-#+HTML_HEAD:    </script>
-
 #+EXPORT_FILE_NAME: index
 
 #+SETUPFILE: theme.setup

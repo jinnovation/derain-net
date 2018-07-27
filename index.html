@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2018-05-25 Fri 02:14 -->
+<!-- 2018-07-27 Fri 16:59 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Reimplementing a deep network architecture for single-image rain removal</title>
@@ -161,6 +161,19 @@
   .footdef  { margin-bottom: 1em; }
   .figure { padding: 1em; }
   .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
   .inlinetask {
     padding: 10px;
     border: 2px solid gray;
@@ -180,14 +193,6 @@
   .org-svg { width: 90%; }
   /*]]>*/-->
 </style>
-<!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-42551205-2"></script>
-<script>
-window.dataLayer = window.dataLayer || [];
-function gtag(){dataLayer.push(arguments);}
-gtag('js', new Date());
-gtag('config', 'UA-42551205-2');
-</script>
 <link rel="stylesheet" type="text/css" href="https://www.pirilampo.org/styles/readtheorg/css/htmlize.css"/>
 <link rel="stylesheet" type="text/css" href="https://www.pirilampo.org/styles/readtheorg/css/readtheorg.css"/>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
@@ -248,34 +253,34 @@ for the JavaScript code in this tag.
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orgfe09246">1. Abstract</a></li>
-<li><a href="#orge1a1366">2. <span class="todo TODO">TODO</span> <code>[1/2]</code> Development</a>
+<li><a href="#org4837b9d">1. Abstract</a></li>
+<li><a href="#orgfa7cde7">2. <span class="todo TODO">TODO</span> <code>[1/2]</code> Development</a>
 <ul>
-<li><a href="#org92b08db">2.1. <span class="done DONE">DONE</span> Data importing and preparation</a></li>
-<li><a href="#orgebe7ae6">2.2. <span class="todo TODO">TODO</span> Model Training</a>
+<li><a href="#org11e8029">2.1. <span class="done DONE">DONE</span> Data importing and preparation</a></li>
+<li><a href="#org9abb92a">2.2. <span class="todo TODO">TODO</span> Model Training</a>
 <ul>
-<li><a href="#org6a2120d">2.2.1. Dependencies</a></li>
-<li><a href="#orgcf6572d">2.2.2. Execution Environment</a></li>
-<li><a href="#org3c18c72">2.2.3. Defining the model</a></li>
-<li><a href="#orga64849b">2.2.4. The Rest of the Owl</a></li>
+<li><a href="#orga9fc8d5">2.2.1. Dependencies</a></li>
+<li><a href="#org2149289">2.2.2. Execution Environment</a></li>
+<li><a href="#org30f34de">2.2.3. Defining the model</a></li>
+<li><a href="#orgb8ad057">2.2.4. The Rest of the Owl</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#org417dd81">3. References</a></li>
-<li><a href="#org6ca5507">4. Appendix</a>
+<li><a href="#orgbb66241">3. References</a></li>
+<li><a href="#orgd700d5f">4. Appendix</a>
 <ul>
-<li><a href="#org3fc3a88">4.1. The Dataset</a></li>
-<li><a href="#orgeb08483">4.2. The Report</a></li>
-<li><a href="#org4c0ee7a">4.3. The Site</a></li>
+<li><a href="#org6d0634f">4.1. The Dataset</a></li>
+<li><a href="#org9203460">4.2. The Report</a></li>
+<li><a href="#orgc5a08b4">4.3. The Site</a></li>
 </ul>
 </li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-orgfe09246" class="outline-2">
-<h2 id="orgfe09246"><span class="section-number-2">1</span> Abstract</h2>
+<div id="outline-container-org4837b9d" class="outline-2">
+<h2 id="org4837b9d"><span class="section-number-2">1</span> Abstract</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 We present a re-implementation of the <a href="https://arxiv.org/pdf/1609.02087v2.pdf">DerainNet method for single-image rain
@@ -287,8 +292,8 @@ model definition; model training; and so on.
 </div>
 </div>
 
-<div id="outline-container-orge1a1366" class="outline-2">
-<h2 id="orge1a1366"><span class="section-number-2">2</span> <span class="todo TODO">TODO</span> <code>[1/2]</code> Development</h2>
+<div id="outline-container-orgfa7cde7" class="outline-2">
+<h2 id="orgfa7cde7"><span class="section-number-2">2</span> <span class="todo TODO">TODO</span> <code>[1/2]</code> Development</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 We&rsquo;ll split the development process roughly into the following stages:
@@ -300,8 +305,8 @@ We&rsquo;ll split the development process roughly into the following stages:
 </ul>
 </div>
 
-<div id="outline-container-org92b08db" class="outline-3">
-<h3 id="org92b08db"><span class="section-number-3">2.1</span> <span class="done DONE">DONE</span> Data importing and preparation</h3>
+<div id="outline-container-org11e8029" class="outline-3">
+<h3 id="org11e8029"><span class="section-number-3">2.1</span> <span class="done DONE">DONE</span> Data importing and preparation</h3>
 <div class="outline-text-3" id="text-2-1">
 <p>
 For starters, we&rsquo;ll need to implement the gateway into our training and
@@ -351,17 +356,17 @@ values within the data directory:
 
 <div class="org-src-container">
 <pre class="src src-python"><span style="color: #81A1C1;">def</span> <span style="color: #88C0D0;">_get_indices</span>(data_dir):
-    <span style="color: #4c566a;">"""Get indices for input/output association.</span>
+    <span style="color: #616e88;">"""Get indices for input/output association.</span>
 
-<span style="color: #4c566a;">    Args:</span>
-<span style="color: #4c566a;">    data_dir: Path to the data directory.</span>
+<span style="color: #616e88;">    Args:</span>
+<span style="color: #616e88;">    data_dir: Path to the data directory.</span>
 
-<span style="color: #4c566a;">    Returns:</span>
-<span style="color: #4c566a;">    indices: List of numerical index values.</span>
+<span style="color: #616e88;">    Returns:</span>
+<span style="color: #616e88;">    indices: List of numerical index values.</span>
 
-<span style="color: #4c566a;">    Raises:</span>
-<span style="color: #4c566a;">    ValueError: If no data_dir or no ground-truth dir.</span>
-<span style="color: #4c566a;">    """</span>
+<span style="color: #616e88;">    Raises:</span>
+<span style="color: #616e88;">    ValueError: If no data_dir or no ground-truth dir.</span>
+<span style="color: #616e88;">    """</span>
 
     <span style="color: #81A1C1;">if</span> <span style="color: #81A1C1;">not</span> tf.gfile.Exists(os.path.join(data_dir, GROUND_TRUTH_DIR)):
         <span style="color: #81A1C1;">raise</span> <span style="color: #8FBCBB;">ValueError</span>(<span style="color: #A3BE8C;">"Failed to find ground-truth directory."</span>)
@@ -380,19 +385,19 @@ output files corresponding to a given set of indices.
 
 <div class="org-src-container">
 <pre class="src src-python"><span style="color: #81A1C1;">def</span> <span style="color: #88C0D0;">_get_input_files</span>(data_dir, indices):
-    <span style="color: #4c566a;">"""Get input files from indices.</span>
+    <span style="color: #616e88;">"""Get input files from indices.</span>
 
-<span style="color: #4c566a;">    Args:</span>
-<span style="color: #4c566a;">    data_dir: Path to the data directory.</span>
-<span style="color: #4c566a;">    indices: List of numerical index values.</span>
+<span style="color: #616e88;">    Args:</span>
+<span style="color: #616e88;">    data_dir: Path to the data directory.</span>
+<span style="color: #616e88;">    indices: List of numerical index values.</span>
 
-<span style="color: #4c566a;">    Returns:</span>
-<span style="color: #4c566a;">    Dictionary, keyed by index value, valued by string lists containing</span>
-<span style="color: #4c566a;">    one or more filenames.</span>
+<span style="color: #616e88;">    Returns:</span>
+<span style="color: #616e88;">    Dictionary, keyed by index value, valued by string lists containing</span>
+<span style="color: #616e88;">    one or more filenames.</span>
 
-<span style="color: #4c566a;">    Raises:</span>
-<span style="color: #4c566a;">    ValueError: If no rainy-image dir.</span>
-<span style="color: #4c566a;">    """</span>
+<span style="color: #616e88;">    Raises:</span>
+<span style="color: #616e88;">    ValueError: If no rainy-image dir.</span>
+<span style="color: #616e88;">    """</span>
 
     <span style="color: #D8DEE9;">directory</span> = os.path.join(data_dir, RAINY_IMAGE_DIR)
     <span style="color: #81A1C1;">if</span> <span style="color: #81A1C1;">not</span> tf.gfile.Exists(directory):
@@ -407,19 +412,19 @@ output files corresponding to a given set of indices.
 
 <div class="org-src-container">
 <pre class="src src-python"><span style="color: #81A1C1;">def</span> <span style="color: #88C0D0;">_get_output_files</span>(data_dir, indices):
-    <span style="color: #4c566a;">"""Get output files from indices.</span>
+    <span style="color: #616e88;">"""Get output files from indices.</span>
 
-<span style="color: #4c566a;">    Args:</span>
-<span style="color: #4c566a;">    data_dir: Path to the data directory.</span>
-<span style="color: #4c566a;">    indices: List of numerical index values.</span>
+<span style="color: #616e88;">    Args:</span>
+<span style="color: #616e88;">    data_dir: Path to the data directory.</span>
+<span style="color: #616e88;">    indices: List of numerical index values.</span>
 
-<span style="color: #4c566a;">    Returns:</span>
-<span style="color: #4c566a;">    outputs: Dictionary, keyed by index value, valued by stsring lists</span>
-<span style="color: #4c566a;">    containing one or more filenames.</span>
+<span style="color: #616e88;">    Returns:</span>
+<span style="color: #616e88;">    outputs: Dictionary, keyed by index value, valued by stsring lists</span>
+<span style="color: #616e88;">    containing one or more filenames.</span>
 
-<span style="color: #4c566a;">    Raises:</span>
-<span style="color: #4c566a;">    ValueError: If no ground-truth dir.</span>
-<span style="color: #4c566a;">    """</span>
+<span style="color: #616e88;">    Raises:</span>
+<span style="color: #616e88;">    ValueError: If no ground-truth dir.</span>
+<span style="color: #616e88;">    """</span>
 
     <span style="color: #D8DEE9;">directory</span> = os.path.join(data_dir, GROUND_TRUTH_DIR)
     <span style="color: #81A1C1;">if</span> <span style="color: #81A1C1;">not</span> tf.gfile.Exists(directory):
@@ -452,16 +457,16 @@ first part of our project.
 
 <div class="org-src-container">
 <pre class="src src-python"><span style="color: #81A1C1;">def</span> <span style="color: #88C0D0;">dataset</span>(data_dir, indices=<span style="color: #81A1C1;">None</span>):
-    <span style="color: #4c566a;">"""Construct dataset for rainy-image evaluation.</span>
+    <span style="color: #616e88;">"""Construct dataset for rainy-image evaluation.</span>
 
-<span style="color: #4c566a;">    Args:</span>
-<span style="color: #4c566a;">    data_dir: Path to the data directory.</span>
-<span style="color: #4c566a;">    indices: The input-output pairings to return. If None (the default), uses</span>
-<span style="color: #4c566a;">    indices present in the data directory.</span>
+<span style="color: #616e88;">    Args:</span>
+<span style="color: #616e88;">    data_dir: Path to the data directory.</span>
+<span style="color: #616e88;">    indices: The input-output pairings to return. If None (the default), uses</span>
+<span style="color: #616e88;">    indices present in the data directory.</span>
 
-<span style="color: #4c566a;">    Returns:</span>
-<span style="color: #4c566a;">    dataset: Dataset of input-output images.</span>
-<span style="color: #4c566a;">    """</span>
+<span style="color: #616e88;">    Returns:</span>
+<span style="color: #616e88;">    dataset: Dataset of input-output images.</span>
+<span style="color: #616e88;">    """</span>
 
     <span style="color: #81A1C1;">if</span> <span style="color: #81A1C1;">not</span> indices:
         <span style="color: #D8DEE9;">indices</span> = _get_indices(data_dir)
@@ -502,13 +507,13 @@ first part of our project.
 </div>
 </div>
 
-<div id="outline-container-orgebe7ae6" class="outline-3">
-<h3 id="orgebe7ae6"><span class="section-number-3">2.2</span> <span class="todo TODO">TODO</span> Model Training</h3>
+<div id="outline-container-org9abb92a" class="outline-3">
+<h3 id="org9abb92a"><span class="section-number-3">2.2</span> <span class="todo TODO">TODO</span> Model Training</h3>
 <div class="outline-text-3" id="text-2-2">
 </div>
 
-<div id="outline-container-org6a2120d" class="outline-4">
-<h4 id="org6a2120d"><span class="section-number-4">2.2.1</span> Dependencies</h4>
+<div id="outline-container-orga9fc8d5" class="outline-4">
+<h4 id="orga9fc8d5"><span class="section-number-4">2.2.1</span> Dependencies</h4>
 <div class="outline-text-4" id="text-2-2-1">
 <div class="org-src-container">
 <pre class="src src-python"><span style="color: #81A1C1;">import</span> tensorflow <span style="color: #81A1C1;">as</span> tf
@@ -519,8 +524,8 @@ first part of our project.
 </div>
 </div>
 
-<div id="outline-container-orgcf6572d" class="outline-4">
-<h4 id="orgcf6572d"><span class="section-number-4">2.2.2</span> Execution Environment</h4>
+<div id="outline-container-org2149289" class="outline-4">
+<h4 id="org2149289"><span class="section-number-4">2.2.2</span> Execution Environment</h4>
 <div class="outline-text-4" id="text-2-2-2">
 <div class="org-src-container">
 <pre class="src src-python">tf.app.flags.DEFINE_string(<span style="color: #A3BE8C;">"checkpoint_dir"</span>, <span style="color: #A3BE8C;">"/tmp/derain-checkpoint"</span>,
@@ -548,8 +553,8 @@ tf.app.flags.DEFINE_integer(<span style="color: #A3BE8C;">"max_steps"</span>,
 </div>
 </div>
 
-<div id="outline-container-org3c18c72" class="outline-4">
-<h4 id="org3c18c72"><span class="section-number-4">2.2.3</span> Defining the model</h4>
+<div id="outline-container-org30f34de" class="outline-4">
+<h4 id="org30f34de"><span class="section-number-4">2.2.3</span> Defining the model</h4>
 <div class="outline-text-4" id="text-2-2-3">
 <div class="org-src-container">
 <pre class="src src-python"><span style="color: #D8DEE9;">MODEL_DEFAULT_PARAMS</span> = {
@@ -576,38 +581,38 @@ tf.app.flags.DEFINE_integer(<span style="color: #A3BE8C;">"max_steps"</span>,
             activation=tf.nn.tanh,
             padding=<span style="color: #A3BE8C;">"same"</span>,
         )
-        <span style="color: #4c566a;"># </span><span style="color: #4c566a;"># 512 kernels of 16x16x3</span>
-        <span style="color: #4c566a;"># </span><span style="color: #4c566a;">l.Conv2D(</span>
-        <span style="color: #4c566a;">#     </span><span style="color: #4c566a;">512,</span>
-        <span style="color: #4c566a;">#     </span><span style="color: #4c566a;">(16, 16),</span>
-        <span style="color: #4c566a;">#     </span><span style="color: #4c566a;">input_shape=(IMAGE_SIZE, IMAGE_SIZE, 3),</span>
-        <span style="color: #4c566a;">#     </span><span style="color: #4c566a;">use_bias=True,</span>
-        <span style="color: #4c566a;">#     </span><span style="color: #4c566a;">activation=tf.nn.tanh,</span>
-        <span style="color: #4c566a;">#     </span><span style="color: #4c566a;">padding="same",</span>
-        <span style="color: #4c566a;"># </span><span style="color: #4c566a;">),</span>
-        <span style="color: #4c566a;"># </span><span style="color: #4c566a;"># 512 kernels of 1x1x512</span>
-        <span style="color: #4c566a;"># </span><span style="color: #4c566a;">l.Conv2D(</span>
-        <span style="color: #4c566a;">#     </span><span style="color: #4c566a;">512,</span>
-        <span style="color: #4c566a;">#     </span><span style="color: #4c566a;">(1, 1),</span>
-        <span style="color: #4c566a;">#     </span><span style="color: #4c566a;">use_bias=True,</span>
-        <span style="color: #4c566a;">#     </span><span style="color: #4c566a;">activation=tf.nn.tanh,</span>
-        <span style="color: #4c566a;"># </span><span style="color: #4c566a;">),</span>
-        <span style="color: #4c566a;"># </span><span style="color: #4c566a;"># 3 kernels of 8x8x512 (one for each color channel)</span>
-        <span style="color: #4c566a;"># </span><span style="color: #4c566a;">l.Conv2D(</span>
-        <span style="color: #4c566a;">#     </span><span style="color: #4c566a;">3,</span>
-        <span style="color: #4c566a;">#     </span><span style="color: #4c566a;">(8, 8),</span>
-        <span style="color: #4c566a;">#     </span><span style="color: #4c566a;">use_bias=True,</span>
-        <span style="color: #4c566a;">#     </span><span style="color: #4c566a;">padding="same",</span>
-        <span style="color: #4c566a;"># </span><span style="color: #4c566a;">),</span>
+        <span style="color: #616e88;"># </span><span style="color: #616e88;"># 512 kernels of 16x16x3</span>
+        <span style="color: #616e88;"># </span><span style="color: #616e88;">l.Conv2D(</span>
+        <span style="color: #616e88;">#     </span><span style="color: #616e88;">512,</span>
+        <span style="color: #616e88;">#     </span><span style="color: #616e88;">(16, 16),</span>
+        <span style="color: #616e88;">#     </span><span style="color: #616e88;">input_shape=(IMAGE_SIZE, IMAGE_SIZE, 3),</span>
+        <span style="color: #616e88;">#     </span><span style="color: #616e88;">use_bias=True,</span>
+        <span style="color: #616e88;">#     </span><span style="color: #616e88;">activation=tf.nn.tanh,</span>
+        <span style="color: #616e88;">#     </span><span style="color: #616e88;">padding="same",</span>
+        <span style="color: #616e88;"># </span><span style="color: #616e88;">),</span>
+        <span style="color: #616e88;"># </span><span style="color: #616e88;"># 512 kernels of 1x1x512</span>
+        <span style="color: #616e88;"># </span><span style="color: #616e88;">l.Conv2D(</span>
+        <span style="color: #616e88;">#     </span><span style="color: #616e88;">512,</span>
+        <span style="color: #616e88;">#     </span><span style="color: #616e88;">(1, 1),</span>
+        <span style="color: #616e88;">#     </span><span style="color: #616e88;">use_bias=True,</span>
+        <span style="color: #616e88;">#     </span><span style="color: #616e88;">activation=tf.nn.tanh,</span>
+        <span style="color: #616e88;"># </span><span style="color: #616e88;">),</span>
+        <span style="color: #616e88;"># </span><span style="color: #616e88;"># 3 kernels of 8x8x512 (one for each color channel)</span>
+        <span style="color: #616e88;"># </span><span style="color: #616e88;">l.Conv2D(</span>
+        <span style="color: #616e88;">#     </span><span style="color: #616e88;">3,</span>
+        <span style="color: #616e88;">#     </span><span style="color: #616e88;">(8, 8),</span>
+        <span style="color: #616e88;">#     </span><span style="color: #616e88;">use_bias=True,</span>
+        <span style="color: #616e88;">#     </span><span style="color: #616e88;">padding="same",</span>
+        <span style="color: #616e88;"># </span><span style="color: #616e88;">),</span>
     ])
 
-    <span style="color: #4c566a;"># </span><span style="color: #4c566a;">TODO: handle each of ModeKeys.{EVAL,TRAIN,PREDICT}</span>
+    <span style="color: #616e88;"># </span><span style="color: #616e88;">TODO: handle each of ModeKeys.{EVAL,TRAIN,PREDICT}</span>
     <span style="color: #81A1C1;">if</span> mode == tf.estimator.ModeKeys.TRAIN:
         <span style="color: #D8DEE9;">predictions</span> = model(inputs, training=<span style="color: #81A1C1;">True</span>)
 
         <span style="color: #D8DEE9;">norm</span> = tf.norm(expected_outputs - predictions, <span style="color: #81A1C1;">ord</span>=<span style="color: #A3BE8C;">"fro"</span>, axis=[-2, -1])
         <span style="color: #D8DEE9;">loss</span> = tf.reduce_mean(norm, 1)
-        <span style="color: #4c566a;"># </span><span style="color: #4c566a;">tf.summary.scalar("loss", loss)</span>
+        <span style="color: #616e88;"># </span><span style="color: #616e88;">tf.summary.scalar("loss", loss)</span>
 
         <span style="color: #D8DEE9;">optimizer</span> = tf.train.GradientDescentOptimizer(params[<span style="color: #A3BE8C;">"learn_rate"</span>])
 
@@ -625,15 +630,15 @@ tf.app.flags.DEFINE_integer(<span style="color: #A3BE8C;">"max_steps"</span>,
 </div>
 </div>
 
-<div id="outline-container-orga64849b" class="outline-4">
-<h4 id="orga64849b"><span class="section-number-4">2.2.4</span> The Rest of the Owl</h4>
+<div id="outline-container-orgb8ad057" class="outline-4">
+<h4 id="orgb8ad057"><span class="section-number-4">2.2.4</span> The Rest of the Owl</h4>
 <div class="outline-text-4" id="text-2-2-4">
 <div class="org-src-container">
 <pre class="src src-python"><span style="color: #81A1C1;">def</span> <span style="color: #88C0D0;">train</span>():
     <span style="color: #D8DEE9;">regressor</span> = tf.estimator.Estimator(
         model_fn=model_fn,
         model_dir=FLAGS.checkpoint_dir,
-        <span style="color: #4c566a;"># </span><span style="color: #4c566a;">TODO</span>
+        <span style="color: #616e88;"># </span><span style="color: #616e88;">TODO</span>
         config=<span style="color: #81A1C1;">None</span>,
         params={},
     )
@@ -667,8 +672,8 @@ tf.app.flags.DEFINE_integer(<span style="color: #A3BE8C;">"max_steps"</span>,
 </div>
 </div>
 
-<div id="outline-container-org417dd81" class="outline-2">
-<h2 id="org417dd81"><span class="section-number-2">3</span> References</h2>
+<div id="outline-container-orgbb66241" class="outline-2">
+<h2 id="orgbb66241"><span class="section-number-2">3</span> References</h2>
 <div class="outline-text-2" id="text-3">
 <ul class="org-ul">
 <li><a href="http://smartdsp.xmu.edu.cn/derainNet.html">http://smartdsp.xmu.edu.cn/derainNet.html</a></li>
@@ -683,12 +688,12 @@ on Image Processing, vol. 26, no. 6, pp. 2944-2956, 2017.</li>
 </div>
 </div>
 
-<div id="outline-container-org6ca5507" class="outline-2">
-<h2 id="org6ca5507"><span class="section-number-2">4</span> Appendix</h2>
+<div id="outline-container-orgd700d5f" class="outline-2">
+<h2 id="orgd700d5f"><span class="section-number-2">4</span> Appendix</h2>
 <div class="outline-text-2" id="text-4">
 </div>
-<div id="outline-container-org3fc3a88" class="outline-3">
-<h3 id="org3fc3a88"><span class="section-number-3">4.1</span> The Dataset</h3>
+<div id="outline-container-org6d0634f" class="outline-3">
+<h3 id="org6d0634f"><span class="section-number-3">4.1</span> The Dataset</h3>
 <div class="outline-text-3" id="text-4-1">
 <p>
 The authors&rsquo; rainy image dataset can be found <a href="http://smartdsp.xmu.edu.cn/memberpdf/fuxueyang/cvpr2017/rainy_image_dataset.zip">here</a>. Unfortunately, that page
@@ -700,8 +705,8 @@ took the liberty of cloning the authors&rsquo; dataset; it is available at
 </div>
 </div>
 
-<div id="outline-container-orgeb08483" class="outline-3">
-<h3 id="orgeb08483"><span class="section-number-3">4.2</span> The Report</h3>
+<div id="outline-container-org9203460" class="outline-3">
+<h3 id="org9203460"><span class="section-number-3">4.2</span> The Report</h3>
 <div class="outline-text-3" id="text-4-2">
 <p>
 This article is written with Emacs and <a href="https://orgmode.org/manual/HTML-export.html">Org mode</a> in the <a href="https://www-cs-faculty.stanford.edu/~knuth/lp.html">literate programming</a>
@@ -710,8 +715,8 @@ style.
 </div>
 </div>
 
-<div id="outline-container-org4c0ee7a" class="outline-3">
-<h3 id="org4c0ee7a"><span class="section-number-3">4.3</span> The Site</h3>
+<div id="outline-container-orgc5a08b4" class="outline-3">
+<h3 id="orgc5a08b4"><span class="section-number-3">4.3</span> The Site</h3>
 <div class="outline-text-3" id="text-4-3">
 <p>
 The source for this write-up, as well as all tangled source files, is hosted
@@ -726,7 +731,7 @@ files were tangled directly from the write-up document.
 <div id="postamble" class="status">
 <p class="date">Date: 2018-04-28 Sat 00:00</p>
 <p class="author">Author: Jonathan Jin</p>
-<p class="date">Created: 2018-05-25 Fri 02:14</p>
+<p class="date">Created: 2018-07-27 Fri 16:59</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>
