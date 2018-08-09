@@ -11,6 +11,8 @@
 
 #+PROPERTY: header-args:python :eval never-export
 
+*Note*: This project is a *work-in-progress*. As such, there are bound to be some rough edges and/or missing functionality here and there. For now, I encourage readers and followers to take what's currently here at face value and follow along for updates as the project progresses. Thanks for the interest! It means a lot to me.
+
 * Abstract
 
   We present a re-implementation of the [[https://arxiv.org/pdf/1609.02087v2.pdf][DerainNet method for single-image rain
