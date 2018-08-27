@@ -20,6 +20,9 @@
   from the authors' implementation in a variety of ways, most notably of which
   is the use of [[https://www.tensorflow.org][TensorFlow]] for all stages in the workflow: data preparation;
   model definition; model training; and so on.
+
+  For our purposes, we will use a mirror of the original authors' dataset hosted
+  at [[https://github.com/jinnovation/rainy-image-dataset][github.com/jinnovation/rainy-image-dataset]].
  
 * TODO [1/2] Development
 
