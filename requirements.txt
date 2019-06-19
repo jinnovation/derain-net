@@ -35,7 +35,7 @@ mistune==0.8.3
 mock==2.0.0
 nbconvert==5.3.1
 nbformat==4.4.0
-notebook==5.4.1
+notebook==5.7.8
 numpy==1.14.3
 olefile==0.44
 opencv-contrib-python==3.2.0.7
